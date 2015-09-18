@@ -1,0 +1,47 @@
+/**
+ * @fileOverview action creator factory method example
+ * @author Max
+ **/
+
+import {createAction} from 'redux-actions';
+import ACTION_TYPE from '../const/action-type';
+
+const fooValidator = (foo, state) => foo > 0;
+
+export const normalAction =  createAction(ACTION_TYPE.NORMAL, payload => payload, () => ({
+    validator: {
+        payload: {
+            func: (payload, state) => payload > 0
+        }
+    }
+}));
+export const multiParaAction = createAction(ACTION_TYPE.MULTI_PARA, (foo, bar) => ({foo, bar}), () => ({
+    validator: {
+        foo: {
+            func: fooValidator,
+            msg: 'foo wrong'
+        },
+        bar: [
+            {
+                func: (bar, state) => bar > 0
+            },
+            {
+                func: (bar, state) => bar < 100
+            }
+        ]
+    }
+}));
+export const asyncAction = createAction(ACTION_TYPE.ASYNC, foo => {
+    const request = ajaxHandler.getStub('/example');
+
+    return {
+        foo,
+        nextPayload: request
+    };
+}, () => ({
+    validator: {
+        foo: {
+            func: fooValidator
+        }
+    }
+}));

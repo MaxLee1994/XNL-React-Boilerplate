@@ -1,0 +1,76 @@
+/**
+ * @fileOverview 页面入口
+ * @author Max
+ **/
+
+import React from 'react';
+import Router from 'react-router';
+import {routes} from '../../routes';
+import {compose, createStore, applyMiddleware} from 'redux';
+import APP from '../../reducer/app';
+import promiseMiddleware from 'redux-promise';
+
+import ValidatorMiddleware from 'redux-validator';
+import createLogger from 'redux-logger';
+import Immutable from 'immutable';
+import * as actions from '../../action/example';
+import AJAXHandler from '../utils/ajax';
+window.ajaxHandler = new AJAXHandler({
+    hostname: __API_SERVER_HOSTNAME__,
+    port: __API_SERVER_PORT__,
+    stubHostname: __STUB_SERVER_HOSTNAME__,
+    stubPort: __STUB_SERVER_PORT__
+});
+
+let finalCreateStore;
+if(__WEBPACK_DEV__) {
+    const devTools = require('redux-devtools').devTools;
+    const persistState = require('redux-devtools').persistState;
+    finalCreateStore = compose(
+       applyMiddleware(ValidatorMiddleware(), promiseMiddleware, createLogger({
+           transformer: (state) => {
+               var newState = {};
+               for (var i of Object.keys(state)) {
+                   if (Immutable.Iterable.isIterable(state[i])) {
+                       newState[i] = state[i].toJS();
+                   } else {
+                       newState[i] = state[i];
+                   }
+               }
+               return newState;
+           }
+       })),
+       devTools(),
+       persistState(window.location.href.match(/[?&]debug_session=([^&]+)\b/))
+   )(createStore);
+} else {
+    finalCreateStore = compose(
+       applyMiddleware(ValidatorMiddleware(), promiseMiddleware)
+   )(createStore);
+}
+
+let initialState = JSON.parse(__INITIAL_STATE__);
+for(let i in initialState) {
+    initialState[i] = Immutable.fromJS(initialState[i]);
+}
+
+const store = finalCreateStore(APP, initialState);
+
+const devToolsStyle = __PHONE__ ? {maxWidth:'90%'} : {};
+
+Router.run(routes, Router.HistoryLocation, (Root, state) => {
+    if(__MOBILE__) {
+        React.initializeTouchEvents(true);
+    }
+
+    const props = {
+        store,
+        routerState: state,
+        devToolsStyle,
+        visibleOnLoad: false
+    };
+
+    React.render((
+        <Root {...props} />
+    ), document.getElementById('root'));
+});

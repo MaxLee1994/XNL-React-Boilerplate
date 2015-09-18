@@ -1,0 +1,34 @@
+/**
+ * @fileOverview example reducer
+ * @author Max
+ **/
+
+import {createReducer} from './utils';
+import ACTION_TYPE from '../const/action-type';
+import Immutable from 'immutable';
+
+/**
+ * 数据结构
+ * example: {
+ *     foo: int
+ *     bar: int
+ * }
+ */
+
+const example = createReducer({}, {
+    [ACTION_TYPE.NORMAL](state, action) {
+        let result = state.set('foo', action.payload);
+        return result;
+    },
+    [ACTION_TYPE.MULTI_PARA](state, action) {
+        let result = state.set('foo', action.payload.foo)
+                          .set('bar', action.payload.bar);
+        return result;
+    },
+    [ACTION_TYPE.ASYNC](state, action) {
+        let result = state.set('bar', action.payload.content.bar);
+        return result;
+    }
+});
+
+export default example;

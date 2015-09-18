@@ -1,0 +1,45 @@
+/**
+ * @fileOverview example page
+ * @author Max
+ **/
+
+import React from 'react';
+import {connect} from 'react-redux';
+import * as actions from '../../../action/example';
+
+const style = _importLess('./index', __dirname);
+class Page extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+    asyncAction() {
+        const {dispatch} = this.props;
+
+        dispatch(actions.asyncAction(4));
+    }
+    render() {
+        const {dispatch, foo, bar} = this.props;
+
+        return (
+            <div>
+                <style scoped>{style}</style>
+                <h1>XNL React Boilerplate</h1>
+                <h2>ctrl + H 打开devtools，或者控制台查看log</h2>
+
+                <button onClick={() => {dispatch(actions.normalAction(1));}}>normal action</button>
+                <button onClick={() => {dispatch(actions.multiParaAction(2,3));}}>multi-para action</button>
+                <button onClick={this.asyncAction.bind(this)}>async action</button>
+
+                <p>foo:{foo}</p>
+                <p>bar:{bar}</p>
+            </div>
+        );
+    }
+}
+
+const selector = state => ({
+    foo: state.example.get('foo'),
+    bar: state.example.get('bar')
+});
+
+export default connect(selector)(Page);

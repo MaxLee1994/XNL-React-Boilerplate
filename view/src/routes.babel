@@ -1,0 +1,37 @@
+/**
+ * @fileOverview 页面路由
+ * @author Max
+ **/
+
+import React from 'react';
+import {Route, DefaultRoute} from 'react-router';
+import Root from './framework/bootstrap/root';
+import Example from './components/page/example/';
+
+const routes = (
+    <Route handler={Root} >
+        <Route path="/" handler={Example} />
+    </Route>
+);
+
+const HTMLWrapRoutes = {
+    ['/'](wrap) {
+        wrap.setTag('title', '示例页面');
+    }
+};
+
+const PageInitialData = {// server-side only
+    ['/'](session, callback) {
+        const promise = httpHelper.getStub({
+            url: '/example/test'
+        });
+
+        Promise.resolve(promise).then((data) => {
+            callback({
+                example: data.content
+            });
+        }).catch();
+    }
+};
+
+export {routes, HTMLWrapRoutes, PageInitialData} ;

@@ -1,0 +1,35 @@
+/**
+ * @fileOverview Root组件
+ * @author Max
+ **/
+
+import React from 'react';
+import {RouteHandler} from 'react-router';
+import {Provider} from 'react-redux';
+
+export default class Root extends React.Component {
+    componentDidMount() {
+        console.log('root did mount');
+    }
+    render() {
+        let dubugPanel = '';
+        if((typeof __WEBPACK_DEV__ === 'undefined' && (typeof process !== 'undefined' && process.env.NODE_ENV !== 'production')) ||
+           (typeof window !== 'undefined' && (typeof __WEBPACK_DEV__ !== 'undefined' && __WEBPACK_DEV__))) {
+            const DevTools = require('redux-devtools/lib/react').DevTools;
+            const DebugPanel = require('redux-devtools/lib/react').DebugPanel;
+            const LogMonitor = require('redux-devtools/lib/react').LogMonitor;
+            dubugPanel =
+                <DebugPanel top bottom right style={this.props.devToolsStyle} >
+                    <DevTools store={this.props.store} monitor={LogMonitor} visibleOnLoad={false}/>
+                </DebugPanel>;
+        }
+        return (
+            <div>
+                <Provider store={this.props.store}>
+                    {() => <RouteHandler routerState={this.props.routerState}/>}
+                </Provider>
+                {dubugPanel}
+            </div>
+        );
+    }
+}

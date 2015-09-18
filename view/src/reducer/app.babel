@@ -1,0 +1,13 @@
+/**
+ * @fileOverview 整个应用的reducer集合
+ * @author Max
+ **/
+
+import {combineReducers} from 'redux';
+import example from './example';
+
+const app = combineReducers({
+    example
+});
+
+export default app;

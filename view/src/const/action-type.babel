@@ -1,0 +1,12 @@
+/**
+ * @fileOverview Action Type 常量集合
+ * @author Max
+ **/
+
+const ACTION_TYPE = {
+    NORMAL: 'NORMAL',
+    MULTI_PARA: 'MULTI_PARA',
+    ASYNC: 'ASYNC',
+};
+
+export default ACTION_TYPE;

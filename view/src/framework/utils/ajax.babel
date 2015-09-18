@@ -1,0 +1,78 @@
+/**
+ * @fileOverview 依赖Jquery.ajax, 产出promise对象
+ *               自动解析JSON数据，服务器返回的数据结构顶层为{flag, content/message}
+ *               附带桩方法
+ * @author Max
+ **/
+
+/* jshint -W030 */
+import $ from '$';
+import URL from 'url';
+
+export default class AJAXHandler {
+    constructor({hostname, port, stubHostname, stubPort}) {
+        this._hostname = hostname;
+        this._port = port;
+        this._stubHostname = stubHostname;
+        this._stubPort = stubPort;
+    }
+    get(url) {
+        return new Promise((resolve, reject) => {
+            $.get(this._urlFilter(url), (data) => {
+                handleData(data, resolve, reject);
+            });
+        });
+    }
+    getStub(url) {
+        return new Promise((resolve, reject) => {
+            $.get(this._urlStubFilter(url), (data) => {
+                handleData(data, resolve, reject);
+            });
+        });
+    }
+    post(url, content) {
+        return new Promise((resolve, reject) => {
+            $.post(this._urlFilter(url), content, (data) => {
+                handleData(data, resolve, reject);
+            });
+        });
+    }
+    postStub(url, content) {
+        return new Promise((resolve, reject) => {
+            $.post(this._urlStubFilter(url), content, (data) => {
+                handleData(data, resolve, reject);
+            });
+        });
+    }
+    _urlFilter(url) {
+        const urlObj = URL.parse(url);
+        if(urlObj.hostname === null && urlObj.port === null) {
+            return `http://${this._hostname}:${this._port}${url}`;
+        }
+    }
+    _urlStubFilter(url) {
+        const urlObj = URL.parse(url);
+        if(urlObj.hostname === null && urlObj.port === null) {
+            return `http://${this._stubHostname}:${this._stubPort}/stub${url}`;
+        }
+    }
+}
+
+function handleData(data, success, error) {
+    var json;
+    if(typeof data !== 'object') {
+        try {
+            json = JSON.parse(data);
+        } catch(e) {
+            error(e);
+        }
+    } else {
+        json = data;
+    }
+
+    if(json.flag) {
+        success && success(json);
+    } else {
+        error && error(json);
+    }
+}
