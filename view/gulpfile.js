@@ -1,7 +1,6 @@
 var gulp = require('gulp');
 var webpack = require('webpack');
 var webpackConfig = require('./webpack.config.js');
-var del = require('del');
 var imagemin = require('gulp-imagemin');
 var pngquant = require('imagemin-pngquant');
 var cache = require('gulp-cache');
