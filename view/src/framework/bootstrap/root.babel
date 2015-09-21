@@ -4,31 +4,44 @@
  **/
 
 import React from 'react';
-import {RouteHandler} from 'react-router';
-import {Provider} from 'react-redux';
 
 export default class Root extends React.Component {
     componentDidMount() {
         console.log('root did mount');
     }
     render() {
-        let dubugPanel = '';
-        if((typeof __WEBPACK_DEV__ === 'undefined' && (typeof process !== 'undefined' && process.env.NODE_ENV !== 'production')) ||
-           (typeof window !== 'undefined' && (typeof __WEBPACK_DEV__ !== 'undefined' && __WEBPACK_DEV__))) {
+        return (
+            <div>
+                {this.props.children}
+            </div>
+        );
+    }
+}
+
+export class DevTools extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            debugPanel: undefined
+        };
+    }
+    componentDidMount() {
+        if(__WEBPACK_DEV__) {
             const DevTools = require('redux-devtools/lib/react').DevTools;
             const DebugPanel = require('redux-devtools/lib/react').DebugPanel;
             const LogMonitor = require('redux-devtools/lib/react').LogMonitor;
-            dubugPanel =
-                <DebugPanel top bottom right style={this.props.devToolsStyle} >
-                    <DevTools store={this.props.store} monitor={LogMonitor} visibleOnLoad={false}/>
-                </DebugPanel>;
+            const devToolsStyle = __PHONE__ ? {maxWidth:'90%'} : {};
+            this.setState({
+                debugPanel: <DebugPanel top bottom right style={devToolsStyle}>
+                                <DevTools store={this.props.store} monitor={LogMonitor} visibleOnLoad={false}/>
+                            </DebugPanel>
+            });
         }
+    }
+    render() {
         return (
             <div>
-                <Provider store={this.props.store}>
-                    {() => <RouteHandler routerState={this.props.routerState}/>}
-                </Provider>
-                {dubugPanel}
+                {this.state.debugPanel}
             </div>
         );
     }

@@ -4,16 +4,18 @@
  **/
 
 import React from 'react';
-import Router from 'react-router';
+import {Provider} from 'react-redux';
 import {routes} from '../../routes';
+import Router from 'react-router';
+import {DevTools} from './root';
 import {compose, createStore, applyMiddleware} from 'redux';
 import APP from '../../reducer/app';
 import promiseMiddleware from 'redux-promise';
-
 import ValidatorMiddleware from 'redux-validator';
 import createLogger from 'redux-logger';
 import Immutable from 'immutable';
-import * as actions from '../../action/example';
+import Root from './root';
+import createBrowserHistory from 'history/lib/createBrowserHistory';
 import AJAXHandler from '../utils/ajax';
 window.ajaxHandler = new AJAXHandler({
     hostname: __API_SERVER_HOSTNAME__,
@@ -56,21 +58,15 @@ for(let i in initialState) {
 
 const store = finalCreateStore(APP, initialState);
 
-const devToolsStyle = __PHONE__ ? {maxWidth:'90%'} : {};
+if(__MOBILE__) {
+    React.initializeTouchEvents(true);
+}
 
-Router.run(routes, Router.HistoryLocation, (Root, state) => {
-    if(__MOBILE__) {
-        React.initializeTouchEvents(true);
-    }
-
-    const props = {
-        store,
-        routerState: state,
-        devToolsStyle,
-        visibleOnLoad: false
-    };
-
-    React.render((
-        <Root {...props} />
-    ), document.getElementById('root'));
-});
+React.render((
+    <div>
+        <Provider store={store}>
+            {() => <Router history={createBrowserHistory()} store={store}>{routes}</Router>}
+        </Provider>
+        <DevTools store={store} />
+    </div>
+), document.getElementById('root'));

@@ -7,14 +7,17 @@
 import express from 'express';
 import React from 'react';
 import url from 'url';
+import {match, RoutingContext} from 'react-router';
 import _importLess from '../utils/less-loader';
-import Router from 'react-router';
+import {default as Root, DevTools} from '../bootstrap/root';
 import {routes, HTMLWrapRoutes, PageInitialData} from '../../routes';
+import {Provider} from 'react-redux';
 import HTMLWrap from '../bootstrap/wrap';
 import {default as config, getInjectGlobalVar} from './config';
 import {compose, createStore, applyMiddleware} from 'redux';
 import APP from '../../reducer/app';
 import {devTools} from 'redux-devtools';
+import createLocation from 'history/lib/createLocation';
 import ValidatorMiddleware from 'redux-validator';
 import HTTPHelper from '../utils/http-helper';
 global.httpHelper = new HTTPHelper({
@@ -56,51 +59,58 @@ app.get('*', (req, res, next) => {
     if(urlObj.path.substr(0, 5) !== '/' + config.get('DIST_PATH') &&
        urlObj.path.substr(0, 5) !== '/stub' &&
        urlObj.path.indexOf('favicon.ico') === -1) {
-        Router.run(routes, urlObj.path, (Root, state) => {
-            console.log('new request ', req.url);
-            res.setHeader('Content-Type', 'text/html');
-            let wrap = new HTMLWrap();
-            HTMLWrapRoutes[state.path] && HTMLWrapRoutes[state.path](wrap);
+        match({
+            routes,
+            location: createLocation(urlObj.path)
+        }, (error, redirectLocation, renderProps) => {
+            if(redirectLocation) {
+                 res.redirect(301, redirectLocation.pathname + redirectLocation.search);
+            } else if(error) {
+                res.status(500).send(error.message);
+            } else if(renderProps === null) {
+                res.status(404).send('Not found');
+            } else {
+                res.setHeader('Content-Type', 'text/html');
+                let wrap = new HTMLWrap();
+                HTMLWrapRoutes[urlObj.pathname] && HTMLWrapRoutes[urlObj.pathname](wrap);
 
-            let globalVars = getInjectGlobalVar(req);
+                let globalVars = getInjectGlobalVar(req);
 
-            const finalCreateStore = process.env.NODE_ENV === 'production' ? compose(
-                applyMiddleware(ValidatorMiddleware())
-            )(createStore) : compose(
-                applyMiddleware(ValidatorMiddleware()),
-                devTools()
-            )(createStore);
+                const finalCreateStore = process.env.NODE_ENV === 'production' ? compose(
+                    applyMiddleware(ValidatorMiddleware())
+                )(createStore) : compose(
+                    applyMiddleware(ValidatorMiddleware()),
+                    devTools()
+                )(createStore);
 
-            PageInitialData[state.path] && PageInitialData[state.path]({}, (initialState) => {
+                PageInitialData[urlObj.pathname] && PageInitialData[urlObj.pathname]({}, (initialState) => {
 
-                let initialStateImmutable = {};
-                for(let i in initialState) {
-                    initialStateImmutable[i] = Immutable.fromJS(initialState[i]);
-                }
-                const store = finalCreateStore(APP, initialStateImmutable);
+                    let initialStateImmutable = {};
+                    for(let i in initialState) {
+                        initialStateImmutable[i] = Immutable.fromJS(initialState[i]);
+                    }
+                    const store = finalCreateStore(APP, initialStateImmutable);
 
-                globalVars.__INITIAL_STATE__ = JSON.stringify(initialState);
+                    globalVars.__INITIAL_STATE__ = JSON.stringify(initialState);
 
-                wrap.injectGlobalVar(globalVars);
+                    wrap.injectGlobalVar(globalVars);
 
-                const devToolsStyle = globalVars.__PHONE__ ? {maxWidth:'90%'} : {};
+                    let html = React.renderToString(
+                        <div>
+                            <Provider store={store}>
+                                {() => <RoutingContext {...renderProps} />}
+                            </Provider>
+                            <DevTools store={store}/>
+                        </div>
+                    );
 
-                const props = {
-                    store,
-                    routerState: state,
-                    devToolsStyle,
-                    visibleOnLoad: false
-                };
-
-                let html = React.renderToString(
-                    <Root {...props}/>
-                );
-
-                html = wrap.getHead() + html + wrap.getBottom();
-                res.send(html);
-                res.end();
-            });
+                    html = wrap.getHead() + html + wrap.getBottom();
+                    res.send(html);
+                    res.end();
+                });
+            }
         });
+
     } else {
         next();
     }
