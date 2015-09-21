@@ -40,11 +40,11 @@ module.exports = {
         base: process.cwd() + '/src/framework/style/base'
     },
     plugins: [
-        // new webpack.optimize.UglifyJsPlugin({ // prod
-        //     compress: {
-        //         warnings: false
-        //     }
-        // }),
+        new webpack.optimize.UglifyJsPlugin({ // prod
+            compress: {
+                warnings: false
+            }
+        }),
         new webpack.optimize.DedupePlugin(),
         new webpack.DefinePlugin({
             __WEBPACK_DEV__: false
