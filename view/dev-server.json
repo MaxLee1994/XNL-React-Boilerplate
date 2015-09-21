@@ -1,0 +1,5 @@
+{
+    "name": "template",
+    "script": "dist/framework/server/server.js",
+    "watch": ["dist", "conf"]
+}
