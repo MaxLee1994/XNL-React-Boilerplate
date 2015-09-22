@@ -1,0 +1,24 @@
+/**
+ * @fileOverview cookie-based storage, 依赖jQuery.cookie, 支持JSON对象直接存储
+ * @author Max
+ **/
+
+import $ from '$';
+
+export default {
+    ['set'](key, obj) {
+        $.cookie(key, JSON.stringify(obj), {expires: 7});
+    },
+    ['get'](key) {
+        let obj;
+        try {
+            obj = JSON.parse($.cookie(key));
+        } catch (e) {
+            console.error(`读取${key}失败`);
+        }
+        return obj;
+    },
+    ['remove'](key) {
+        $.removeCookie(key);
+    }
+};

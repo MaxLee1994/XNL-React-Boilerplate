@@ -16,12 +16,14 @@ import Immutable from 'immutable';
 import createBrowserHistory from 'history/lib/createBrowserHistory';
 
 import AJAX from '../utils/ajax';
-window.ajax= new AJAX({
+import Storage from '../utils/storage';
+window._ajax= new AJAX({
     hostname: __API_SERVER_HOSTNAME__,
     port: __API_SERVER_PORT__,
     stubHostname: __STUB_SERVER_HOSTNAME__,
     stubPort: __STUB_SERVER_PORT__
 });
+window._storage = Storage;
 
 let finalCreateStore;
 if(__WEBPACK_DEV__) {
