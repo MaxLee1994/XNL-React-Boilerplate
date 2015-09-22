@@ -7,8 +7,6 @@ var cache = require('gulp-cache');
 var packageFile = require('package')('.');
 var watch = require('gulp-watch');
 var exec = require('child_process').exec;
-var htmlRebuild = require('gulp-html-rebuild');
-var htmlPrettify = require('gulp-prettify');
 var babel = require('gulp-babel');
 var less = require('gulp-less');
 var postcss = require('gulp-postcss');
@@ -17,8 +15,6 @@ var cssnano = require('cssnano');
 var lessBaseImport = require('gulp-less-base-import');
 var mocha = require('gulp-mocha');
 var plumber = require('gulp-plumber');
-
-var exec = require('child_process').exec;
 var path = require('path');
 
 var BUILD_DIR = 'dist';
@@ -28,7 +24,6 @@ var IMG_SRC_DIR = 'images';
 var IMG_DEST_DIR = 'images';
 var COMPONENT_SRC_DIR = 'components';
 var COMPONENT_DEST_DIR = 'components';
-var STANDALONE_DIR = 'standalone';
 var JS_LIB_SRC_DIR = 'lib';
 var JS_LIB_DEST_DIR = 'lib';
 

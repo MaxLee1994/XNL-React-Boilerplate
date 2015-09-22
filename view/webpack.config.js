@@ -9,8 +9,7 @@ module.exports = {
     },
     output: {
         path: path.join(__dirname, 'dist', 'js/page'),
-        filename: '[name].js',
-        sourceMapFilename: '[file].map'
+        filename: '[name].js'
     },
     externals: {
         '$': '$',
