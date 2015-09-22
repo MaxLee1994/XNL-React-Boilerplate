@@ -11,7 +11,7 @@
   deploy : {
     production : {
       user : "root",
-      host : "tuwlzx.xiaonian.me",
+      host : "xiaonian.me",
       ref  : "origin/master",
       repo : "https://github.com/MaxLee1994/XNL-React-Boilerplate.git",
       path : "/usr/local/nginx/html/XNL-React-Boilerplate",
