@@ -17,11 +17,10 @@ export default class DevToolsClass extends React.Component {
             const DevTools = require('redux-devtools/lib/react').DevTools;
             const DebugPanel = require('redux-devtools/lib/react').DebugPanel;
             const LogMonitor = require('redux-devtools/lib/react').LogMonitor;
-            const devToolsStyle = __PHONE__ ? {maxWidth:'90%'} : {};
+            const DiffMonitor = require('redux-devtools-diff-monitor');
+            const devToolsStyle = __PHONE__ ? {maxWidth:'80%'} : {};
             this.setState({
-                debugPanel: <DebugPanel top bottom right style={devToolsStyle}>
-                                <DevTools store={this.props.store} monitor={LogMonitor} visibleOnLoad={false}/>
-                            </DebugPanel>
+                debugPanel: <DevTools store={this.props.store} monitor={DiffMonitor} visibleOnLoad={false} />
             });
         }
     }
