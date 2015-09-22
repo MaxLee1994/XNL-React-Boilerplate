@@ -15,7 +15,7 @@
       ref  : "origin/master",
       repo : "https://github.com/MaxLee1994/XNL-React-Boilerplate.git",
       path : "/usr/local/nginx/html/XNL-React-Boilerplate",
-      "post-deploy" : "cd view && npm i && gulp && pm2 startOrRestart ecosystem.json5"
+      "post-deploy" : "pm2 startOrRestart ecosystem.json5"
     }
   }
 }
