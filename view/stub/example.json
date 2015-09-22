@@ -1,6 +1,6 @@
 {
-    "flag": true,
-    "content": {
+    "result_code": 0,
+    "data": {
         "foo": 100,
         "bar": 50
     }

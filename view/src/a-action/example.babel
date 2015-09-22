@@ -32,7 +32,7 @@ export const multiParaAction = createAction(ACTION_TYPE.MULTI_PARA, (foo, bar) =
     }
 }));
 export const asyncAction = createAction(ACTION_TYPE.ASYNC, foo => {
-    const request = ajaxHandler.getStub('/example');
+    const request = _ajax.getStub('/example');
 
     return {
         foo,

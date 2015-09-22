@@ -26,7 +26,7 @@ const example = createReducer(Immutable.Map(), {
         return result;
     },
     [ACTION_TYPE.ASYNC](state, action) {
-        let result = state.set('bar', action.payload.content.bar);
+        let result = state.set('bar', action.payload.bar);
         return result;
     }
 });
