@@ -4,7 +4,7 @@
  **/
 
 module.exports = {
-    PORT: 80,
+    PORT: 8888,
     APP: '',
     DIST_PATH: 'dist',
     JS_LIB_PATH: '/dist/lib/',
@@ -12,7 +12,7 @@ module.exports = {
     IMAGE_STATIC_PATH: '/dist/images/',
     STUB_SERVER: {
         HOSTNAME: 'localhost',
-        PORT: 80,
+        PORT: 8888,
         FILE_DIR: 'stub'
     },
     API_SERVER: {
