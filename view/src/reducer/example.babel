@@ -15,7 +15,7 @@ import Immutable from 'immutable';
  * }
  */
 
-const example = createReducer({}, {
+const example = createReducer(Immutable.Map(), {
     [ACTION_TYPE.NORMAL](state, action) {
         let result = state.set('foo', action.payload);
         return result;

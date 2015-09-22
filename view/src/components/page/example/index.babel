@@ -12,6 +12,9 @@ class Page extends React.Component {
     constructor(props) {
         super(props);
     }
+    static initialData(wrap) {
+
+    }
     asyncAction() {
         const {dispatch} = this.props;
 

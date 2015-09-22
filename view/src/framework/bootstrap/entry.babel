@@ -14,7 +14,7 @@ import promiseMiddleware from 'redux-promise';
 import ValidatorMiddleware from 'redux-validator';
 import createLogger from 'redux-logger';
 import Immutable from 'immutable';
-import Root from './root';
+import Root from '../../components/root';
 import createBrowserHistory from 'history/lib/createBrowserHistory';
 import AJAXHandler from '../utils/ajax';
 window.ajaxHandler = new AJAXHandler({

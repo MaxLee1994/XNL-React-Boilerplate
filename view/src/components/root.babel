@@ -4,8 +4,12 @@
  **/
 
 import React from 'react';
+import {connect} from 'react-redux';
 
-export default class Root extends React.Component {
+class Root extends React.Component {
+    static initialData(wrap) {
+        wrap.setTag('title', 'XNL-React-Boilerplate');
+    }
     componentDidMount() {
         console.log('root did mount');
     }
@@ -17,3 +21,7 @@ export default class Root extends React.Component {
         );
     }
 }
+
+const selector = state => ({});
+
+export default connect(selector)(Root);
