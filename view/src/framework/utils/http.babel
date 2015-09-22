@@ -84,7 +84,7 @@ export default class HTTP {
             urlObj.port = this._stubPort;
             urlObj.protocol = 'http';
             urlObj.slashes = true;
-            urlObj.path = '/stub' + urlObj.path;
+            urlObj.pathname = '/stub' + urlObj.pathname;
 
             result = URL.format(urlObj);
         }

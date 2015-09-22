@@ -59,12 +59,13 @@ export default class AJAX {
     _urlStubFilter(url) {
         let result = url;
         const urlObj = URL.parse(url);
+
         if(urlObj.hostname === null && urlObj.port === null) {
             urlObj.hostname = this._stubHostname;
             urlObj.port = this._stubPort;
             urlObj.protocol = 'http';
             urlObj.slashes = true;
-            urlObj.path = '/stub' + urlObj.path;
+            urlObj.pathname = '/stub' + urlObj.pathname;
 
             result = URL.format(urlObj);
         }
