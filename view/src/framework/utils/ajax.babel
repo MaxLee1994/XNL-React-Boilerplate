@@ -88,7 +88,7 @@ function handleData(data, resolve, reject) {
         json = data;
     }
 
-    if(json.result_code) {
+    if(json.result_code === 0) {
         resolve(json.data);
     } else {
         reject(json);
