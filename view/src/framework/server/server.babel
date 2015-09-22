@@ -8,6 +8,7 @@ import _importLess from '../utils/less-loader';
 import config from './config';
 import Stub from './stub';
 import Page from './page';
+import cookieParser from 'cookie-parser';
 
 import HTTP from '../utils/http';
 global._http = new HTTP({
@@ -19,6 +20,7 @@ global._http = new HTTP({
 
 const app = express();
 
+app.use(cookieParser());
 app.use('/' + config.get('DIST_PATH'), express.static(config.get('DIST_PATH')));
 app.all('/stub/*', Stub);
 app.get('*', Page);

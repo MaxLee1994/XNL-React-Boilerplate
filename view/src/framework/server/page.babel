@@ -66,6 +66,14 @@ export default function(req, res, next) {
                             initialState[j] = data[i][j];
                         }
                     }
+                    if(req.cookies.initialData) {
+                        const initialData = JSON.parse(req.cookies.initialData);
+                        for(let i in initialData) {
+                            let item = initialData[i];
+                            initialStateImmutable[i] = Immutable.fromJS(item);
+                            initialState[i] = item;
+                        }
+                    }
 
                     const store = finalCreateStore(APP, initialStateImmutable);
 

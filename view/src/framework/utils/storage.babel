@@ -5,7 +5,27 @@
 
 import $ from '$';
 
+const INITIAL_DATA_NAMESPACE = 'initialData';
+
 export default {
+    ['$set'](key, obj) {
+        let initialDataObj = getInitialDataObj();
+
+        initialDataObj[key] = obj;
+
+        $.cookie(INITIAL_DATA_NAMESPACE, JSON.stringify(initialDataObj), {expires: 7});
+    },
+    ['$get'](key) {
+        let initialDataObj = getInitialDataObj();
+
+        return initialDataObj[key];
+    },
+    ['$remove'](key) {
+        let initialDataObj = getInitialDataObj();
+        delete initialDataObj[key];
+
+        $.cookie(INITIAL_DATA_NAMESPACE, JSON.stringify(initialDataObj), {expires: 7});
+    },
     ['set'](key, obj) {
         $.cookie(key, JSON.stringify(obj), {expires: 7});
     },
@@ -22,3 +42,7 @@ export default {
         $.removeCookie(key);
     }
 };
+
+function getInitialDataObj() {
+    return JSON.parse($.cookie(INITIAL_DATA_NAMESPACE) || '{}');
+}
