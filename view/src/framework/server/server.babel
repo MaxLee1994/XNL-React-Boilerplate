@@ -3,25 +3,12 @@
  * @author Max
  **/
 
-/* jshint -W030 */
 import express from 'express';
-import React from 'react';
-import url from 'url';
-import {match, RoutingContext} from 'react-router';
 import _importLess from '../utils/less-loader';
-import Root from '../../components/root';
-import DevTools from '../bootstrap/devtools';
-import {routes, HTMLWrapRoutes, PageInitialData} from '../../routes';
-import {Provider} from 'react-redux';
-import HTMLWrap from '../bootstrap/wrap';
-import {default as config, globalVars} from './config';
-import {compose, createStore, applyMiddleware} from 'redux';
-import APP from '../../reducer/app';
-import {devTools} from 'redux-devtools';
-import createLocation from 'history/lib/createLocation';
-import ValidatorMiddleware from 'redux-validator';
-import MobileDetect from 'mobile-detect';
-import clone from 'lodash.clonedeep';
+import config from './config';
+import Stub from './stub';
+import Page from './page';
+
 import HTTP from '../utils/http';
 global.http = new HTTP({
     hostname: config.getIn(['API_SERVER', 'HOSTNAME']),
@@ -29,118 +16,12 @@ global.http = new HTTP({
     stubHostname: config.getIn(['STUB_SERVER', 'HOSTNAME']),
     stubPort: config.getIn(['STUB_SERVER', 'PORT'])
 });
-import Immutable from 'immutable';
-import fs from 'fs';
-import path from 'path';
-
-const finalCreateStore = process.env.NODE_ENV === 'production' ? compose(
-    applyMiddleware(ValidatorMiddleware())
-)(createStore) : compose(
-    applyMiddleware(ValidatorMiddleware()),
-    devTools()
-)(createStore);
 
 const app = express();
 
 app.use('/' + config.get('DIST_PATH'), express.static(config.get('DIST_PATH')));
-
-app.all('/stub/*', (req, res) => {
-
-    const urlObj = url.parse(req.url);
-
-    let stubFilePath = path.join(process.cwd(), config.getIn(['STUB_SERVER', 'FILE_DIR']), urlObj.path.substr(6, urlObj.path.length - 6).split('/').join('.') + '.json');
-    let content;
-    try{
-        content = JSON.parse(fs.readFileSync(stubFilePath, 'utf-8'));
-    } catch(e) {
-        content = {
-            flag: false,
-            message: '404 not found'
-        };
-    }
-
-    res.json(content);
-});
-
-app.get('*', (req, res, next) => {
-
-    const urlObj = url.parse(req.url);
-
-    if(urlObj.path.substr(0, 5) !== '/' + config.get('DIST_PATH') &&
-       urlObj.path.substr(0, 5) !== '/stub' &&
-       urlObj.path.indexOf('favicon.ico') === -1) {
-        console.log(`new request ${urlObj.path}`);
-        match({
-            routes,
-            location: createLocation(urlObj.path)
-        }, (error, redirectLocation, renderProps) => {
-            if(redirectLocation) {
-                 res.redirect(301, redirectLocation.pathname + redirectLocation.search);
-            } else if(error) {
-                res.status(500).send(error.message);
-            } else if(renderProps === null) {
-                res.status(404).send('Not found');
-            } else {
-                let wrap = new HTMLWrap();
-
-                let loadingDataTasks = [];
-                renderProps.components.map(item => {
-                    if(item.WrappedComponent && item.WrappedComponent.initialData) {
-                        let promise = item.WrappedComponent.initialData(wrap);
-                        if(Promise.prototype.isPrototypeOf(promise)) loadingDataTasks.push(promise);
-                    }
-                });
-
-                const renderPage = data => {
-                    let initialStateImmutable = {};
-                    let initialState = {};
-                    for(let i in data) {
-                        for(let j in data[i]) {
-                            initialStateImmutable[j] = Immutable.fromJS(data[i][j]);
-                            initialState[j] = data[i][j];
-                        }
-                    }
-
-                    const store = finalCreateStore(APP, initialStateImmutable);
-
-                    const md = new MobileDetect(req.headers['user-agent']);
-                    let thisGlobalVars = clone(globalVars);
-                    thisGlobalVars.__INITIAL_STATE__ = JSON.stringify(initialState);
-                    thisGlobalVars.__PHONE__ = md.phone() !== null;
-                    thisGlobalVars.__TABLET__ = md.tablet() !== null;
-                    thisGlobalVars.__MOBILE__ = md.mobile() !== null;
-                    wrap.injectGlobalVar(thisGlobalVars);
-
-                    let html = React.renderToString(
-                        <div>
-                            <Provider store={store}>
-                                {() => <RoutingContext {...renderProps} />}
-                            </Provider>
-                            <DevTools store={store}/>
-                        </div>
-                    );
-
-                    html = wrap.getHead() + html + wrap.getBottom();
-                    res.setHeader('Content-Type', 'text/html');
-                    res.send(html);
-                    res.end();
-                };
-
-                Promise.all(loadingDataTasks).then(renderPage).catch((err) => {
-                    console.error(err);
-                    renderPage([]);
-                });
-
-            }
-        });
-
-    } else {
-        next();
-    }
-
-});
-
-
+app.all('/stub/*', Stub);
+app.get('*', Page);
 
 app.listen(config.get('PORT'));
 console.log(`listen to ${config.get('PORT')}`);

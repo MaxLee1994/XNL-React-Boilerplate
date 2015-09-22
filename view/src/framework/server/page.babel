@@ -1,0 +1,104 @@
+/**
+ * @fileOverview 渲染页面
+ * @author Max
+ **/
+
+import React from 'react';
+import {default as config, globalVars} from './config';
+import url from 'url';
+import {compose, createStore, applyMiddleware} from 'redux';
+import APP from '../../reducer/app';
+import {devTools} from 'redux-devtools';
+import createLocation from 'history/lib/createLocation';
+import ValidatorMiddleware from 'redux-validator';
+import MobileDetect from 'mobile-detect';
+import clone from 'lodash.clonedeep';
+import startsWith from 'lodash.startswith';
+import Immutable from 'immutable';
+import HTMLWrap from '../bootstrap/wrap';
+import {routes} from '../../routes';
+import {Provider} from 'react-redux';
+import DevTools from '../bootstrap/devtools';
+import {match, RoutingContext} from 'react-router';
+
+const finalCreateStore = process.env.NODE_ENV === 'production' ? compose(
+    applyMiddleware(ValidatorMiddleware())
+)(createStore) : compose(
+    applyMiddleware(ValidatorMiddleware()),
+    devTools()
+)(createStore);
+
+export default function(req, res, next) {
+
+    const urlObj = url.parse(req.url);
+
+    if(!startsWith(urlObj.path, '/' + config.get('DIST_PATH')) &&
+       !startsWith(urlObj.path, '/stub') &&
+       urlObj.path.indexOf('favicon.ico') === -1) {
+        console.log(`new request ${urlObj.path}`);
+        match({
+            routes,
+            location: createLocation(urlObj.path)
+        }, (error, redirectLocation, renderProps) => {
+            if(redirectLocation) {
+                 res.redirect(301, redirectLocation.pathname + redirectLocation.search);
+            } else if(error) {
+                res.status(500).send(error.message);
+            } else if(renderProps === null) {
+                res.status(404).send('Not found');
+            } else {
+                let wrap = new HTMLWrap();
+
+                let loadingDataTasks = [];
+                renderProps.components.map(item => {
+                    if(item.WrappedComponent && item.WrappedComponent.initialData) {
+                        let promise = item.WrappedComponent.initialData(wrap);
+                        if(Promise.prototype.isPrototypeOf(promise)) loadingDataTasks.push(promise);
+                    }
+                });
+
+                const renderPage = data => {
+                    let initialStateImmutable = {};
+                    let initialState = {};
+                    for(let i in data) {
+                        for(let j in data[i]) {
+                            initialStateImmutable[j] = Immutable.fromJS(data[i][j]);
+                            initialState[j] = data[i][j];
+                        }
+                    }
+
+                    const store = finalCreateStore(APP, initialStateImmutable);
+
+                    const md = new MobileDetect(req.headers['user-agent']);
+                    let thisGlobalVars = clone(globalVars);
+                    thisGlobalVars.__INITIAL_STATE__ = JSON.stringify(initialState);
+                    thisGlobalVars.__PHONE__ = md.phone() !== null;
+                    thisGlobalVars.__TABLET__ = md.tablet() !== null;
+                    thisGlobalVars.__MOBILE__ = md.mobile() !== null;
+                    wrap.injectGlobalVar(thisGlobalVars);
+
+                    let html = React.renderToString(
+                        <div>
+                            <Provider store={store}>
+                                {() => <RoutingContext {...renderProps} />}
+                            </Provider>
+                            <DevTools store={store}/>
+                        </div>
+                    );
+
+                    html = wrap.getHead() + html + wrap.getBottom();
+                    res.setHeader('Content-Type', 'text/html');
+                    res.send(html);
+                    res.end();
+                };
+
+                Promise.all(loadingDataTasks).then(renderPage).catch((err) => {
+                    console.error(err);
+                    renderPage([]);
+                });
+            }
+        });
+    } else {
+        next();
+    }
+}

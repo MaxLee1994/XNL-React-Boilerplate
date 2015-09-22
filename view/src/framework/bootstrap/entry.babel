@@ -16,6 +16,7 @@ import createLogger from 'redux-logger';
 import Immutable from 'immutable';
 import Root from '../../components/root';
 import createBrowserHistory from 'history/lib/createBrowserHistory';
+
 import AJAX from '../utils/ajax';
 window.ajax= new AJAX({
     hostname: __API_SERVER_HOSTNAME__,

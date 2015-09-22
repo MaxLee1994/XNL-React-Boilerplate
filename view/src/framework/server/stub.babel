@@ -1,0 +1,26 @@
+/**
+ * @fileOverview 桩
+ * @author Max
+ **/
+
+import fs from 'fs';
+import path from 'path';
+import config from './config';
+import url from 'url';
+
+export default function(req, res) {
+    const urlObj = url.parse(req.url);
+
+    let stubFilePath = path.join(process.cwd(), config.getIn(['STUB_SERVER', 'FILE_DIR']), urlObj.path.substr(6, urlObj.path.length - 6).split('/').join('.') + '.json');
+    let content;
+    try{
+        content = JSON.parse(fs.readFileSync(stubFilePath, 'utf-8'));
+    } catch(e) {
+        content = {
+            result_code: 1,
+            error: '404 not found'
+        };
+    }
+
+    res.json(content);
+}
