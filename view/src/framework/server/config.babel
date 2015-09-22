@@ -6,25 +6,17 @@
 import devConfig from '../../../conf/dev';
 import prodConfig from '../../../conf/prod';
 import Immutable from 'immutable';
-import MobileDetect from 'mobile-detect';
 
-var config = process.env.NODE_ENV === 'production' ? prodConfig : devConfig;
+const config = process.env.NODE_ENV === 'production' ? prodConfig : devConfig;
 
-export function getInjectGlobalVar(req) {
-    const md = new MobileDetect(req.headers['user-agent']);
-    const obj = {
-        __PHONE__: md.phone() !== null,
-        __TABLET__: md.tablet() !== null,
-        __MOBILE__: md.mobile() !== null,
-        __IMAGE__: config.IMAGE_STATIC_PATH,
-        __APP__: config.APP,
-        __STUB_SERVER_HOSTNAME__: config.STUB_SERVER.HOSTNAME,
-        __STUB_SERVER_PORT__: config.STUB_SERVER.PORT,
-        __API_SERVER_HOSTNAME__: config.API_SERVER.HOSTNAME,
-        __API_SERVER_PORT__: config.API_SERVER.PORT,
-        __DEV__: process.env.NODE_ENV === 'production' ? false : true
-    };
+export const globalVars = {
+    __IMAGE__: config.IMAGE_STATIC_PATH,
+    __APP__: config.APP,
+    __STUB_SERVER_HOSTNAME__: config.STUB_SERVER.HOSTNAME,
+    __STUB_SERVER_PORT__: config.STUB_SERVER.PORT,
+    __API_SERVER_HOSTNAME__: config.API_SERVER.HOSTNAME,
+    __API_SERVER_PORT__: config.API_SERVER.PORT,
+    __DEV__: process.env.NODE_ENV === 'production' ? false : true
+};
 
-    return obj;
-}
 export default Immutable.fromJS(config);

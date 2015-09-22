@@ -14,12 +14,14 @@ import DevTools from '../bootstrap/devtools';
 import {routes, HTMLWrapRoutes, PageInitialData} from '../../routes';
 import {Provider} from 'react-redux';
 import HTMLWrap from '../bootstrap/wrap';
-import {default as config, getInjectGlobalVar} from './config';
+import {default as config, globalVars} from './config';
 import {compose, createStore, applyMiddleware} from 'redux';
 import APP from '../../reducer/app';
 import {devTools} from 'redux-devtools';
 import createLocation from 'history/lib/createLocation';
 import ValidatorMiddleware from 'redux-validator';
+import MobileDetect from 'mobile-detect';
+import clone from 'lodash.clonedeep';
 import HTTP from '../utils/http';
 global.http = new HTTP({
     hostname: config.getIn(['API_SERVER', 'HOSTNAME']),
@@ -79,7 +81,6 @@ app.get('*', (req, res, next) => {
                 res.status(404).send('Not found');
             } else {
                 let wrap = new HTMLWrap();
-                let globalVars = getInjectGlobalVar(req);
 
                 let loadingDataTasks = [];
                 renderProps.components.map(item => {
@@ -101,8 +102,13 @@ app.get('*', (req, res, next) => {
 
                     const store = finalCreateStore(APP, initialStateImmutable);
 
-                    globalVars.__INITIAL_STATE__ = JSON.stringify(initialState);
-                    wrap.injectGlobalVar(globalVars);
+                    const md = new MobileDetect(req.headers['user-agent']);
+                    let thisGlobalVars = clone(globalVars);
+                    thisGlobalVars.__INITIAL_STATE__ = JSON.stringify(initialState);
+                    thisGlobalVars.__PHONE__ = md.phone() !== null;
+                    thisGlobalVars.__TABLET__ = md.tablet() !== null;
+                    thisGlobalVars.__MOBILE__ = md.mobile() !== null;
+                    wrap.injectGlobalVar(thisGlobalVars);
 
                     let html = React.renderToString(
                         <div>
