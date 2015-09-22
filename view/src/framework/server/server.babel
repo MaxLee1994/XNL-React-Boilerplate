@@ -20,8 +20,8 @@ import APP from '../../reducer/app';
 import {devTools} from 'redux-devtools';
 import createLocation from 'history/lib/createLocation';
 import ValidatorMiddleware from 'redux-validator';
-import HTTPHelper from '../utils/http-helper';
-global.httpHelper = new HTTPHelper({
+import HTTP from '../utils/http';
+global.http = new HTTP({
     hostname: config.getIn(['API_SERVER', 'HOSTNAME']),
     port: config.getIn(['API_SERVER', 'PORT']),
     stubHostname: config.getIn(['STUB_SERVER', 'HOSTNAME']),

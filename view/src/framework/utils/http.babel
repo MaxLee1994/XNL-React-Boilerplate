@@ -1,15 +1,15 @@
 /**
- * @fileOverview client-side ajax 请求, 依赖Jquery.ajax, 产出promise对象
+ * @fileOverview server-side http 请求, 产出Promise
  *               自动解析JSON数据，服务器返回的数据结构顶层为{result_code: int(0为成功，其余为错误码), data/error}
  *               附带桩方法
  * @author Max
- **/
+ */
 
-/* jshint -W030 */
-import $ from '$';
+import http from 'http';
+import querystring from 'querystring';
 import URL from 'url';
 
-export default class AJAX {
+export default class HTTP {
     constructor({hostname, port, stubHostname, stubPort}) {
         this._hostname = hostname;
         this._port = port;
@@ -24,22 +24,42 @@ export default class AJAX {
     }
     _getPromise(url) {
         return new Promise((resolve, reject) => {
-            $.get(url, data => {
-                handleData(data, resolve, reject);
-            });
+            console.log('new HTTP GET:', url);
+            http.get(url, (res) => {
+                resHandler(res, resolve, reject);
+            }).on('error', reject);
         });
     }
     post(url, content) {
         return this._postPromise(this._urlFilter(url), content);
     }
-    postStub(url, content) {
+    postStub(options, data) {
         return this._postPromise(this._urlStubFilter(url), content);
     }
     _postPromise(url, content) {
+        const _content = querystring.stringify(content);
+        const urlObj = URL.parse(url);
+        const options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Length': _content.length
+            },
+            hostname: urlObj.hostname,
+            port: urlObj.port,
+            path: urlObj.path
+        };
+
         return new Promise((resolve, reject) => {
-            $.post(url, content, data => {
-                handleData(data, resolve, reject);
+            console.log('new HTTP POST:', url);
+            const req = http.request(options, function(res) {
+                resHandler(res, resolve, reject);
             });
+
+            req.on('error', reject);
+
+            req.write(_content);
+            req.end();
         });
     }
     _urlFilter(url) {
@@ -73,23 +93,27 @@ export default class AJAX {
     }
 }
 
-function handleData(data, resolve, reject) {
-    let json;
-    if(typeof data !== 'object') {
+function resHandler(res, resolve, reject) {
+    res.setEncoding('utf8');
+    let body = '';
+    res.on('data', function(chunk) {
+        body += chunk;
+    });
+    res.on('end', function() {
+        let json;
         try {
-            json = JSON.parse(data);
+            json = JSON.parse(body);
         } catch(e) {
-            console.log(json);
+            console.log(body);
             reject(e);
             return;
         }
-    } else {
-        json = data;
-    }
 
-    if(json.result_code) {
-        resolve(json.data);
-    } else {
-        reject(json);
-    }
+        if(json.result_code === 0) {
+            resolve(json.data);
+        } else {
+            reject(json);
+        }
+    });
+    res.on('error', reject);
 }
