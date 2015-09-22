@@ -12,9 +12,7 @@ import {compose, createStore, applyMiddleware} from 'redux';
 import APP from '../../reducer/app';
 import promiseMiddleware from 'redux-promise';
 import ValidatorMiddleware from 'redux-validator';
-import createLogger from 'redux-logger';
 import Immutable from 'immutable';
-import Root from '../../components/root';
 import createBrowserHistory from 'history/lib/createBrowserHistory';
 
 import AJAX from '../utils/ajax';
@@ -29,6 +27,7 @@ let finalCreateStore;
 if(__WEBPACK_DEV__) {
     const devTools = require('redux-devtools').devTools;
     const persistState = require('redux-devtools').persistState;
+    const createLogger = require('redux-logger');
     finalCreateStore = compose(
        applyMiddleware(ValidatorMiddleware(), promiseMiddleware, createLogger({
            transformer: (state) => {
