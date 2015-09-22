@@ -5,7 +5,7 @@
 
 import React from 'react';
 import {connect} from 'react-redux';
-import * as actions from '../../../action/example';
+import * as actions from '../../../a-action/example';
 
 const style = _importLess('./index', __dirname);
 class Page extends React.Component {

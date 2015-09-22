@@ -9,7 +9,7 @@ import {routes} from '../../routes';
 import Router from 'react-router';
 import DevTools from './devtools';
 import {compose, createStore, applyMiddleware} from 'redux';
-import APP from '../../reducer/app';
+import APP from '../../a-reducer/app';
 import promiseMiddleware from 'redux-promise';
 import ValidatorMiddleware from 'redux-validator';
 import Immutable from 'immutable';
