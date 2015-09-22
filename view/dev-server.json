@@ -1,5 +1,8 @@
 {
     "name": "template",
     "script": "dist/framework/server/server.js",
-    "watch": ["dist", "conf"]
+    "watch": ["dist", "conf"],
+    "env": {
+        "NODE_ENV": ""
+    }
 }

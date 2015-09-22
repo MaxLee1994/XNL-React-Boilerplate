@@ -69,6 +69,7 @@ app.get('*', (req, res, next) => {
     if(urlObj.path.substr(0, 5) !== '/' + config.get('DIST_PATH') &&
        urlObj.path.substr(0, 5) !== '/stub' &&
        urlObj.path.indexOf('favicon.ico') === -1) {
+        console.log(`new request ${urlObj.path}`);
         match({
             routes,
             location: createLocation(urlObj.path)
