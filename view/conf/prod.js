@@ -4,7 +4,7 @@
  **/
 
 module.exports = {
-    PORT: 8888,
+    PORT: 8889,
     APP: '',
     DIST_PATH: 'dist',
     JS_LIB_PATH: '/dist/lib/',
