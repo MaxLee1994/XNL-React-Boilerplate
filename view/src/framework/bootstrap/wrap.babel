@@ -37,7 +37,7 @@ const bottom = {
     jquery: process.env.NODE_ENV === 'production' ? '<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>' : `<script type="text/javascript" src="${config.get('JS_LIB_PATH')}jquery-2.1.4.min.js"></script>`,
     react: process.env.NODE_ENV === 'production' ? '<script type="text/javascript" src="//cdn.bootcss.com/react/0.13.3/react-with-addons.min.js"></script>' : `<script type="text/javascript" src="${config.get('JS_LIB_PATH')}react-with-addons-0.13.3.js"></script>`,
     immutable: process.env.NODE_ENV === 'production' ? '<script type="text/javascript" src="//cdn.bootcss.com/immutable/3.7.4/immutable.min.js"></script>' : `<script type="text/javascript" src="${config.get('JS_LIB_PATH')}immutable-3.7.4.min.js"></script>`,
-    cookie: process.env.NODE_ENV === 'production' ? '<script type="text/javascript" src="//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>' : `<script type="text/javascript" src="${config.get('JS_LIB_PATH')}jquery-cookie-1.4.1.min.js"></script>`,
+    cookie: process.env.NODE_ENV === 'production' ? '<script type="text/javascript" src="//cdn.bootcss.com/js-cookie/2.0.3/js.cookie.min.js"></script>' : `<script type="text/javascript" src="${config.get('JS_LIB_PATH')}js-cookie-2.0.3.min.js"></script>`,
     entry: `<script type="text/javascript" src="${config.get('JS_STATIC_PATH')}page/entry.js"></script>`,
     bodyTagClose: '</body>',
     htmlTagClose: '</html>'

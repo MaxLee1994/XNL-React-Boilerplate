@@ -1,48 +1,38 @@
 /**
- * @fileOverview cookie-based storage, 依赖jQuery.cookie, 支持JSON对象直接存储
+ * @fileOverview cookie-based storage, 依赖js-cookie, 支持JSON对象直接存储
  * @author Max
  **/
 
-import $ from '$';
+ import Cookies from 'cookies';
 
-const INITIAL_DATA_NAMESPACE = 'initialData';
+ const INITIAL_DATA_NAMESPACE = 'initialData';
 
-export default {
-    ['$set'](key, obj) {
-        let initialDataObj = getInitialDataObj();
+ export default {
+     ['$set'](key, obj) {
+         let initialDataObj = Cookies.getJSON(INITIAL_DATA_NAMESPACE) || {};
 
-        initialDataObj[key] = obj;
+         initialDataObj[key] = obj;
 
-        $.cookie(INITIAL_DATA_NAMESPACE, JSON.stringify(initialDataObj), {expires: 7});
-    },
-    ['$get'](key) {
-        let initialDataObj = getInitialDataObj();
+         Cookies.set(INITIAL_DATA_NAMESPACE, JSON.stringify(initialDataObj), {expires: 7, path: '/'});
+     },
+     ['$get'](key) {
+         let initialDataObj = Cookies.getJSON(INITIAL_DATA_NAMESPACE) || {};
 
-        return initialDataObj[key];
-    },
-    ['$remove'](key) {
-        let initialDataObj = getInitialDataObj();
-        delete initialDataObj[key];
+         return initialDataObj[key];
+     },
+     ['$remove'](key) {
+         let initialDataObj = Cookies.getJSON(INITIAL_DATA_NAMESPACE) || {};
+         delete initialDataObj[key];
 
-        $.cookie(INITIAL_DATA_NAMESPACE, JSON.stringify(initialDataObj), {expires: 7});
-    },
-    ['set'](key, obj) {
-        $.cookie(key, JSON.stringify(obj), {expires: 7});
-    },
-    ['get'](key) {
-        let obj;
-        try {
-            obj = JSON.parse($.cookie(key));
-        } catch (e) {
-            console.error(`读取${key}失败`);
-        }
-        return obj;
-    },
-    ['remove'](key) {
-        $.removeCookie(key);
-    }
-};
-
-function getInitialDataObj() {
-    return JSON.parse($.cookie(INITIAL_DATA_NAMESPACE) || '{}');
-}
+         Cookies.set(INITIAL_DATA_NAMESPACE, JSON.stringify(initialDataObj), {expires: 7, path: '/'});
+     },
+     ['set'](key, obj) {
+         Cookies.set(key, JSON.stringify(obj), {expires: 7, path: '/'});
+     },
+     ['get'](key) {
+         return Cookies.getJSON(key);
+     },
+     ['remove'](key) {
+         Cookies.remove(key, {path: '/'});
+     }
+ };

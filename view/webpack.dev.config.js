@@ -15,7 +15,8 @@ module.exports = {
     externals: {
         '$': '$',
         'react': 'React',
-        'immutable': 'Immutable'
+        'immutable': 'Immutable',
+        'cookies': 'Cookies'
     },
     module: {
         loaders: [
