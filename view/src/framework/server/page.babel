@@ -52,7 +52,7 @@ export default function(req, res, next) {
                 let loadingDataTasks = [];
                 renderProps.components.map(item => {
                     if(item.WrappedComponent && item.WrappedComponent.initialData) {
-                        let promise = item.WrappedComponent.initialData(wrap);
+                        let promise = item.WrappedComponent.initialData(wrap, config);
                         if(Promise.prototype.isPrototypeOf(promise)) loadingDataTasks.push(promise);
                     }
                 });

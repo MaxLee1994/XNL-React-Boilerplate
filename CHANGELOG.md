@@ -4,5 +4,6 @@
 
 # 0.1.1
 
-+ modify npm scripts
-+ expose TAG_TYPE through HTMLWrap class not wrap module
++ 修改npm scripts
++ 通过HTMLwrap类暴露TAG_TYPE, 而不是直接通过模块暴露
++ 组件的initialData方法注入config参数
