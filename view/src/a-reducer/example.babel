@@ -16,6 +16,9 @@ import Immutable from 'immutable';
  */
 
 const example = createReducer(Immutable.Map(), {
+    ['@@INIT'](state, action) {// 初始化操作，例如normalizr
+        return state;
+    },
     [ACTION_TYPE.NORMAL](state, action) {
         let result = state.set('foo', action.payload);
         return result;
