@@ -4,7 +4,7 @@
  **/
 
 import expect from 'expect.js';
-import {default as HTMLWrap, TAG_TYPE} from '../../framework/bootstrap/wrap';
+import HTMLWrap from '../../framework/bootstrap/wrap';
 
 export default function tests() {
     it('convert obj to array', () => {
@@ -74,26 +74,26 @@ export default function tests() {
 
     it('append script tag', () => {
         let a = new HTMLWrap();
-        a.appendTagAfter('entry', 'newTag', {src:'123'}, TAG_TYPE.SCRIPT);
+        a.appendTagAfter('entry', 'newTag', {src:'123'}, a.TAG_TYPE.SCRIPT);
         expect(a.getBottom()).to.contain('<script type="text/javascript" src="123"></script>');
     });
 
     it('append link tag', () => {
         let a = new HTMLWrap();
-        a.appendTagAfter('formatDetection', 'newTag', {href:'345'}, TAG_TYPE.STYLE);
+        a.appendTagAfter('formatDetection', 'newTag', {href:'345'}, a.TAG_TYPE.STYLE);
         expect(a.getHead()).to.contain('<link rel="stylesheet" href="345" >');
     });
 
     it('append meta tag', () => {
         let a = new HTMLWrap();
-        a.appendTagAfter('formatDetection', 'newTag', {a:'345', b:'hahah', c:'kuku'}, TAG_TYPE.META);
+        a.appendTagAfter('formatDetection', 'newTag', {a:'345', b:'hahah', c:'kuku'}, a.TAG_TYPE.META);
         expect(a.getHead()).to.contain('<meta a="345" b="hahah" c="kuku" >');
     });
 
     it('append duplicated tag key', () => {
         let a = new HTMLWrap();
         let fn = () => {
-            a.appendTagAfter('entry', 'entry', {src:'123'}, TAG_TYPE.SCRIPT);
+            a.appendTagAfter('entry', 'entry', {src:'123'}, a.TAG_TYPE.SCRIPT);
         };
         expect(fn).to.throwException(/不能插入重复的标签key/);
     });
@@ -101,7 +101,7 @@ export default function tests() {
     it('append undefined tag key', () => {
         let a = new HTMLWrap();
         let fn = () => {
-            a.appendTagAfter('nobody', 'hh', {src:'123'}, TAG_TYPE.SCRIPT);
+            a.appendTagAfter('nobody', 'hh', {src:'123'}, a.TAG_TYPE.SCRIPT);
         };
         expect(fn).to.throwException(/未找到已有的key/);
     });
@@ -129,13 +129,13 @@ export default function tests() {
 
     it('prepend script tag', () => {
         let a = new HTMLWrap();
-        a.prependTagBefore('entry', 'newTag', {src:'123'}, TAG_TYPE.SCRIPT);
+        a.prependTagBefore('entry', 'newTag', {src:'123'}, a.TAG_TYPE.SCRIPT);
         expect(a.getBottom()).to.contain('<script type="text/javascript" src="123"></script><script type="text/javascript" src="/dist/js/page/entry.js"></script>');
     });
 
     it('prepend script tag without src', () => {
         let a = new HTMLWrap();
-        a.prependTagBefore('entry', 'newTag', {content:'123'}, TAG_TYPE.SCRIPT);
+        a.prependTagBefore('entry', 'newTag', {content:'123'}, a.TAG_TYPE.SCRIPT);
         expect(a.getBottom()).to.contain('<script type="text/javascript">123</script><script type="text/javascript" src="/dist/js/page/entry.js"></script>');
     });
 
@@ -148,5 +148,13 @@ export default function tests() {
         let a = new HTMLWrap();
         a.addCDNInsurance('test', 'abcdefg');
         expect(a.getBottom()).to.contain('if(typeof React === "undefined"){document.write(unescape(\'%3Cscript src="/dist/lib/react-with-addons-0.13.3.js"%3E%3C/script%3E\'));}\nif(typeof Immutable === "undefined"){document.write(unescape(\'%3Cscript src="/dist/lib/immutable-3.7.4.min.js"%3E%3C/script%3E\'));}\nif(typeof $ === "undefined"){document.write(unescape(\'%3Cscript src="/dist/lib/jquery-2.1.4.min.js"%3E%3C/script%3E\'));}\nif(typeof test === "undefined"){document.write(unescape(\'%3Cscript src="abcdefg"%3E%3C/script%3E\'));}');
+    });
+
+    it('expose TAG_TYPE', () => {
+        let a = new HTMLWrap();
+
+        expect(a.TAG_TYPE.SCRIPT).to.be('script');
+        expect(a.TAG_TYPE.STYLE).to.be('style');
+        expect(a.TAG_TYPE.META).to.be('meta');
     });
 }

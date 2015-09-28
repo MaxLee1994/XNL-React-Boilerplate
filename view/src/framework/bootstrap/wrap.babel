@@ -43,7 +43,7 @@ const bottom = {
     htmlTagClose: '</html>'
 };
 
-export const TAG_TYPE = {
+const TAG_TYPE = {
     SCRIPT: 'script',
     STYLE: 'style',
     META: 'meta'
@@ -65,6 +65,7 @@ export default class HTMLWrap {
         this._head =  convertObjToArray(head);
         this._bottom = convertObjToArray(bottom);
         this._cdnInsurance = convertObjToArray(CDN_INSURANCE);
+        this.TAG_TYPE = TAG_TYPE;
 
         this.prependTagBefore('entry', 'cdnInsurance', {
             content: this._getCDNInsuranceSentence()

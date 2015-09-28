@@ -4,4 +4,5 @@
 
 # 0.1.1
 
-+ mdoify npm scripts
++ modify npm scripts
++ expose TAG_TYPE through HTMLWrap class not wrap module
