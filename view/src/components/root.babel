@@ -6,8 +6,8 @@
 import React from 'react';
 import {connect} from 'react-redux';
 
-const globalStyle = _importLess('../framework/style/global', __dirname);
-const resetStyle = _importLess('../framework/style/reset', __dirname);
+const globalStyle = _importLess('../style/global', __dirname);
+const resetStyle = _importLess('../style/reset', __dirname);
 class Root extends React.Component {
     static initialData(wrap, config) {
         wrap.setTag('title', 'XNL-React-Boilerplate');
