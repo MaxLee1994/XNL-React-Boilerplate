@@ -9,3 +9,4 @@
 + 组件的initialData方法注入config参数
 + 暴露用户自定义style文件到framework外
 + storage依赖js-cookie,抛弃jquery.cookie
++ 服务器端错误将stack信息暴露到前端，方便在不监控服务器log情况下调试bug

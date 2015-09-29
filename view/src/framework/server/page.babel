@@ -60,49 +60,54 @@ export default function(req, res, next) {
                 const renderPage = data => {
                     let initialStateImmutable = {};
                     let initialState = {};
-                    for(let i in data) {
-                        for(let j in data[i]) {
-                            initialStateImmutable[j] = Immutable.fromJS(data[i][j]);
-                            initialState[j] = data[i][j];
+                    let html;
+                    try {
+                        for(let i in data) {
+                            for(let j in data[i]) {
+                                initialStateImmutable[j] = Immutable.fromJS(data[i][j]);
+                                initialState[j] = data[i][j];
+                            }
                         }
-                    }
-                    if(req.cookies.initialData) {
-                        const initialData = JSON.parse(req.cookies.initialData);
-                        for(let i in initialData) {
-                            let item = initialData[i];
-                            initialStateImmutable[i] = Immutable.fromJS(item);
-                            initialState[i] = item;
+                        if(req.cookies.initialData) {
+                            const initialData = JSON.parse(req.cookies.initialData);
+                            for(let i in initialData) {
+                                let item = initialData[i];
+                                initialStateImmutable[i] = Immutable.fromJS(item);
+                                initialState[i] = item;
+                            }
                         }
+
+                        const store = finalCreateStore(APP, initialStateImmutable);
+
+                        const md = new MobileDetect(req.headers['user-agent']);
+                        let thisGlobalVars = clone(globalVars);
+                        thisGlobalVars.__INITIAL_STATE__ = JSON.stringify(initialState);
+                        thisGlobalVars.__PHONE__ = md.phone() !== null;
+                        thisGlobalVars.__TABLET__ = md.tablet() !== null;
+                        thisGlobalVars.__MOBILE__ = md.mobile() !== null;
+                        wrap.injectGlobalVar(thisGlobalVars);
+
+                        html = React.renderToString(
+                            <div>
+                                <Provider store={store}>
+                                    {() => <RoutingContext {...renderProps} />}
+                                </Provider>
+                                <DevTools store={store}/>
+                            </div>
+                        );
+
+                    } catch(e) {
+                        html = e.stack;
                     }
 
-                    const store = finalCreateStore(APP, initialStateImmutable);
-
-                    const md = new MobileDetect(req.headers['user-agent']);
-                    let thisGlobalVars = clone(globalVars);
-                    thisGlobalVars.__INITIAL_STATE__ = JSON.stringify(initialState);
-                    thisGlobalVars.__PHONE__ = md.phone() !== null;
-                    thisGlobalVars.__TABLET__ = md.tablet() !== null;
-                    thisGlobalVars.__MOBILE__ = md.mobile() !== null;
-                    wrap.injectGlobalVar(thisGlobalVars);
-
-                    let html = React.renderToString(
-                        <div>
-                            <Provider store={store}>
-                                {() => <RoutingContext {...renderProps} />}
-                            </Provider>
-                            <DevTools store={store}/>
-                        </div>
-                    );
-
-                    html = wrap.getHead() + html + wrap.getBottom();
+                    html = wrap.getHead() + (html || '') + wrap.getBottom();
                     res.setHeader('Content-Type', 'text/html');
                     res.send(html);
                     res.end();
                 };
 
                 Promise.all(loadingDataTasks).then(renderPage).catch((err) => {
-                    console.error(err);
-                    renderPage([]);
+                    res.status(500).send(err.stack);
                 });
             }
         });
