@@ -29,5 +29,6 @@ module.exports = {
         OSS_ENDPOINT: 'http://oss-cn-qingdao.aliyuncs.com',
         BUCKET: 'xnl-project',
         DIRECTORY: 'template'
-    }
+    },
+    CROSSDOMAIN: 'http://localhost:3000'
 };

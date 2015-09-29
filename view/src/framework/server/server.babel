@@ -22,6 +22,10 @@ global._http = new HTTP({
 const app = express();
 
 app.use(cookieParser());
+app.all('*', (req, res, next) => {
+    res.setHeader("Access-Control-Allow-Origin", config.get('CROSSDOMAIN'));
+    next();
+});
 app.use('/' + config.get('DIST_PATH'), express.static(config.get('DIST_PATH')));
 app.all('/stub/*', Stub);
 app.all(config.getIn(['IMAGE_UPLOAD', 'PATH']), ImageUpload);
