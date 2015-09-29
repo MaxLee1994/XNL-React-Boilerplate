@@ -18,5 +18,16 @@ module.exports = {
     API_SERVER: {
         HOSTNAME: 'localhost',
         PORT: 8080
+    },
+    IMAGE_UPLOAD: {
+        PATH: '/image/upload',
+        MAX_SIZE: 2097152
+    },
+    ALIYUN: {
+        ACCESS_KEY_ID: 'troDIDnP6lguSWDV',
+        ACCESS_KEY_SECRET: 'YoCsBasrrdmmpZzoAroBazsEkWqrg6',
+        OSS_ENDPOINT: 'http://oss-cn-qingdao.aliyuncs.com',
+        BUCKET: 'xnl-project',
+        DIRECTORY: 'template'
     }
 };

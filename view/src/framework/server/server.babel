@@ -8,6 +8,7 @@ import _importLess from '../utils/less-loader';
 import config from './config';
 import Stub from './stub';
 import Page from './page';
+import ImageUpload from './image-upload';
 import cookieParser from 'cookie-parser';
 
 import HTTP from '../utils/http';
@@ -23,6 +24,7 @@ const app = express();
 app.use(cookieParser());
 app.use('/' + config.get('DIST_PATH'), express.static(config.get('DIST_PATH')));
 app.all('/stub/*', Stub);
+app.all(config.getIn(['IMAGE_UPLOAD', 'PATH']), ImageUpload);
 app.get('*', Page);
 
 app.listen(config.get('PORT'));

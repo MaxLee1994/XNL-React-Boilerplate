@@ -1,0 +1,84 @@
+/**
+ * @fileOverview 图片上传至OSS
+ * @author Max
+ **/
+
+import Formidable from 'formidable';
+import config from './config';
+import {OSS} from 'aliyun-sdk';
+import fs from 'fs';
+import fse from 'fs-extra';
+import uuid from 'node-uuid';
+
+var oss = new OSS({
+    "accessKeyId": config.getIn(['ALIYUN', 'ACCESS_KEY_ID']),
+    "secretAccessKey": config.getIn(['ALIYUN', 'ACCESS_KEY_SECRET']),
+    endpoint: config.getIn(['ALIYUN', 'OSS_ENDPOINT']),
+    apiVersion: '2013-10-15'
+});
+
+export default function(req, res, next) {
+    var form = new Formidable.IncomingForm();
+    form.encoding = 'utf-8';
+    form.uploadDir = process.cwd();
+    form.maxFieldsSize = config.getIn(['IMAGE_UPLOAD', 'MAX_SIZE']);
+
+    form.parse(req, function(err, fields, files) {
+        let tasks = [];
+        if(err) {
+            console.error(err);
+            res.json({
+                success: false,
+                err: err.stack
+            });
+            return;
+        }
+        for(let i in files) {
+            tasks.push(
+                new Promise((resolve, reject) => {
+                    fs.readFile(files[i].path, (err, data) => {
+                        if (err) {
+                            console.error(err);
+                            reject(err);
+                            return;
+                        }
+
+                        const key = uuid.v1();
+                        oss.putObject({
+                            Bucket: config.getIn(['ALIYUN', 'BUCKET']),
+                            Key: `${config.getIn(['ALIYUN', 'DIRECTORY'])}/${key}`,
+                            Body: data,
+                            AccessControlAllowOrigin: '',
+                            ContentType: files[i].type,
+                            CacheControl: 'no-cache',
+                            ContentDisposition: '',
+                            ContentEncoding: 'utf-8',
+                            ServerSideEncryption: 'AES256',
+                            Expires: undefined
+                        }, function (err, data) {
+                            if (err) {
+                                console.error(err);
+                                reject(err);
+                                return;
+                            }
+                            fse.removeSync(files[i].path);
+                            resolve(`http://xnl-project.oss-cn-qingdao.aliyuncs.com/${config.getIn(['ALIYUN', 'DIRECTORY'])}/${key}`);
+                        });
+                    });
+                })
+            );
+        }
+
+        Promise.all(tasks).then(data => {
+            res.json({
+                "success": true,
+                "file_path": data
+            });
+        }).catch((err) => {
+            res.json({
+                success: false,
+                err: err.stack
+            });
+        });
+    });
+}
