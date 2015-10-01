@@ -11,7 +11,7 @@ module.exports = {
     JS_STATIC_PATH: '/dist/js/',
     IMAGE_STATIC_PATH: '/dist/images/',
     STUB_SERVER: {
-        HOSTNAME: 'localhost',
+        HOSTNAME: '127.0.0.1',
         PORT: 80,
         FILE_DIR: 'stub'
     },
@@ -30,5 +30,5 @@ module.exports = {
         BUCKET: 'xnl-project',
         DIRECTORY: 'template'
     },
-    CROSSDOMAIN: 'http://localhost:3000'
+    CROSSDOMAIN: '*'
 };
