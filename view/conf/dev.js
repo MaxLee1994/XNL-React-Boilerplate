@@ -10,6 +10,7 @@ module.exports = {
     JS_LIB_PATH: '/dist/lib/',
     JS_STATIC_PATH: '/dist/js/',
     IMAGE_STATIC_PATH: '/dist/images/',
+    STYLE_STATIC_PATH: '/dist/style/',
     STUB_SERVER: {
         HOSTNAME: '127.0.0.1',
         PORT: 80,
