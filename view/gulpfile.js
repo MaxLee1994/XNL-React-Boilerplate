@@ -95,11 +95,17 @@ gulp.task('move lib', [], function() {
 
 gulp.task('watch webpack', [], function() {
     try {
-        exec('webpack --watch -d --config webpack.dev.config.js', function(err, stdout, stderr) {
-            console.log(stdout);
-            console.log(stderr);
-            if(err) console.log(err);
-        });
+        var action = function() {
+            exec('webpack --watch -d --config webpack.dev.config.js', function(err, stdout, stderr) {
+                console.log(stdout);
+                console.log(stderr);
+                if(err) {
+                    console.log(err);
+                    action();
+                }
+            });
+        };
+        action();
     } catch(e) {
         console.log(e);
     }
