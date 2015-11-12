@@ -13,3 +13,9 @@
 + 增加图片上传模块，图片存储服务依赖阿里云OSS
 + 允许配置跨域访问
 + 增加服务器端redirect策略
+
+# 0.1.2
+
++ gulpfile watch webpack增加意外重启机制
++ reset.less和global.less由wrap引入
++ server端注入全局变量，并暴露__DIST__全局变量
