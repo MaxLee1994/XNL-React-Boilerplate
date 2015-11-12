@@ -10,6 +10,7 @@ import Immutable from 'immutable';
 const config = process.env.NODE_ENV === 'production' ? prodConfig : devConfig;
 
 export const globalVars = {
+    __DIST__: '/' + config.DIST_PATH,
     __IMAGE__: config.IMAGE_STATIC_PATH,
     __APP__: config.APP,
     __STUB_SERVER_HOSTNAME__: config.STUB_SERVER.HOSTNAME,
@@ -18,5 +19,9 @@ export const globalVars = {
     __API_SERVER_PORT__: config.API_SERVER.PORT,
     __DEV__: process.env.NODE_ENV === 'production' ? false : true
 };
+
+for(let i in globalVars) {
+    global[i] = globalVars[i];
+}
 
 export default Immutable.fromJS(config);
