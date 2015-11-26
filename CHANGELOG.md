@@ -19,3 +19,9 @@
 + gulpfile watch webpack增加意外重启机制
 + reset.less和global.less由wrap引入
 + server端注入全局变量，并暴露__DIST__全局变量
+
+# 0.1.3
+
++ 暴露__MOBILE__等变量到路由props中
++ css utils 调整respon方法的通用性
++ 修复路由空component导致的错误
