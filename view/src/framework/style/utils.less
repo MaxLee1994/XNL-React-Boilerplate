@@ -131,13 +131,12 @@
     }
 
     // responsive property
-    .respon(@property, @value) {
-        @ratio-1: .85;
-        @width-1: 375px;
+    .respon(@property, @value1, @value2) {
+        @width-1: 374px;
 
-        @{property}: @value;
+        @{property}: @value1;
         @media only screen and (max-width: @width-1) {
-            @{property}: @value * @ratio-1;
+            @{property}: @value2;
         }
     }
 
