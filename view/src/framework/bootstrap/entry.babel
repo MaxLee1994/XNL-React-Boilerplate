@@ -64,10 +64,22 @@ if(__MOBILE__) {
     React.initializeTouchEvents(true);
 }
 
+const customProps = {
+    __MOBILE__: __MOBILE__,
+    __PHONE__: __PHONE__,
+    __TABLET__: __TABLET__
+};
+const createElement = (Component, props) => {
+    let newProps = props;
+    for(let i in customProps) {
+        newProps[i] = customProps[i];
+    }
+    return React.createElement(Component, newProps);
+};
 React.render((
     <div>
         <Provider store={store}>
-            {() => <Router history={createBrowserHistory()} store={store}>{routes}</Router>}
+            {() => <Router history={createBrowserHistory()} store={store} createElement={createElement}>{routes}</Router>}
         </Provider>
         <DevTools store={store} />
     </div>

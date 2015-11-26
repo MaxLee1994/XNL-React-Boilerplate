@@ -87,6 +87,19 @@ export default function(req, res, next) {
                         thisGlobalVars.__MOBILE__ = md.mobile() !== null;
                         wrap.injectGlobalVar(thisGlobalVars);
 
+                        const customProps = {
+                            __PHONE__: thisGlobalVars.__PHONE__,
+                            __TABLET__: thisGlobalVars.__TABLET__,
+                            __MOBILE__: thisGlobalVars.__MOBILE__
+                        };
+                        let routerProps = renderProps;
+                        routerProps.createElement = (Component, props) => {
+                            let newProps = props;
+                            for(let i in customProps) {
+                                newProps[i] = customProps[i];
+                            }
+                            return React.createElement(Component, newProps);
+                        };
                         html = React.renderToString(
                             <div>
                                 <Provider store={store}>
