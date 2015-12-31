@@ -25,3 +25,8 @@
 + 暴露__MOBILE__等变量到路由props中
 + css utils 调整respon方法的通用性
 + 修复路由空component导致的错误
+
+# 0.1.4
+
++ 更新包依赖，主要React升级到0.14
++ action字段验证方案不再采用redux中间件，解决Promise先发出HTTP请求的问题
