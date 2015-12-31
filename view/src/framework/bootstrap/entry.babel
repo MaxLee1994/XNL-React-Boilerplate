@@ -4,14 +4,13 @@
  **/
 
 import React from 'react';
+import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
 import {routes} from '../../routes';
 import Router from 'react-router';
-import DevTools from './devtools';
 import {compose, createStore, applyMiddleware} from 'redux';
 import APP from '../../a-reducer/app';
 import promiseMiddleware from 'redux-promise';
-import ValidatorMiddleware from 'redux-validator';
 import Immutable from 'immutable';
 import createBrowserHistory from 'history/lib/createBrowserHistory';
 
@@ -25,13 +24,24 @@ window._ajax= new AJAX({
 });
 window._storage = Storage;
 
-let finalCreateStore;
+let finalCreateStore, devTools;
 if(__WEBPACK_DEV__) {
-    const devTools = require('redux-devtools').devTools;
+    const createDevTools = require('redux-devtools').createDevTools;
+    const LogMonitor = require('redux-devtools-log-monitor').default;
+    const DockMonitor = require('redux-devtools-dock-monitor').default;
+    devTools = createDevTools(
+        <DockMonitor toggleVisibilityKey='ctrl-h' changePositionKey='ctrl-q' defaultIsVisible={false}>
+            <LogMonitor theme='tomorrow' />
+        </DockMonitor>
+    );
     const persistState = require('redux-devtools').persistState;
+    const getDebugSessionKey = () => {
+        const matches = window.location.href.match(/[?&]debug_session=([^&]+)\b/);
+        return (matches && matches.length > 0)? matches[1] : null;
+    };
     const createLogger = require('redux-logger');
     finalCreateStore = compose(
-       applyMiddleware(ValidatorMiddleware(), promiseMiddleware, createLogger({
+       applyMiddleware(promiseMiddleware, createLogger({
            transformer: (state) => {
                var newState = {};
                for (var i of Object.keys(state)) {
@@ -44,12 +54,12 @@ if(__WEBPACK_DEV__) {
                return newState;
            }
        })),
-       devTools(),
-       persistState(window.location.href.match(/[?&]debug_session=([^&]+)\b/))
+       devTools.instrument(),
+       persistState(getDebugSessionKey())
    )(createStore);
 } else {
     finalCreateStore = compose(
-       applyMiddleware(ValidatorMiddleware(), promiseMiddleware)
+       applyMiddleware(promiseMiddleware)
    )(createStore);
 }
 
@@ -60,14 +70,11 @@ for(let i in initialState) {
 
 const store = finalCreateStore(APP, initialState);
 
-if(__MOBILE__) {
-    React.initializeTouchEvents(true);
-}
-
 const customProps = {
     __MOBILE__: __MOBILE__,
     __PHONE__: __PHONE__,
-    __TABLET__: __TABLET__
+    __TABLET__: __TABLET__,
+    devTools: devTools
 };
 const createElement = (Component, props) => {
     let newProps = props;
@@ -76,11 +83,9 @@ const createElement = (Component, props) => {
     }
     return React.createElement(Component, newProps);
 };
-React.render((
-    <div>
-        <Provider store={store}>
-            {() => <Router history={createBrowserHistory()} store={store} createElement={createElement}>{routes}</Router>}
-        </Provider>
-        <DevTools store={store} />
-    </div>
+
+ReactDOM.render((
+    <Provider store={store}>
+        <Router history={createBrowserHistory()} store={store} createElement={createElement}>{routes}</Router>
+    </Provider>
 ), document.getElementById('root'));

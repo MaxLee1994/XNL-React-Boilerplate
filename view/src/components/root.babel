@@ -12,13 +12,30 @@ class Root extends React.Component {
         wrap.prependTagBefore('headTagClose', 'globalStyle', {href: config.get('STYLE_STATIC_PATH') + 'global.css'}, wrap.TAG_TYPE.STYLE);
         wrap.prependTagBefore('headTagClose', 'resetStyle', {href: config.get('STYLE_STATIC_PATH') + 'reset.css'}, wrap.TAG_TYPE.STYLE);
     }
+    constructor(props) {
+        super(props);
+        this.state = {
+            client: false
+        };
+    }
     componentDidMount() {
         console.log('root did mount');
+        this.setState({
+            client: true
+        });
     }
     render() {
+        let debugPanel;
+        if(this.state.client) {
+            if(this.props.devTools) {
+                debugPanel = <this.props.devTools />;
+            }
+        }
+
         return (
             <div>
                 {this.props.children}
+                {debugPanel}
             </div>
         );
     }

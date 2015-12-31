@@ -1,0 +1,49 @@
+/**
+ * @fileOverview 字段验证
+ * @author Max
+ **/
+
+import {isMobilePhone, isInt, isFloat, isBoolean} from 'validator';
+
+export const notEmptyValidator = value => value !== '' && value !== undefined && value !== null && !(Array.prototype.isPrototypeOf(value) && value.length === 0) && !(typeof value === 'object' && isEmptyObj(value));
+export const phoneValidator = value => isMobilePhone(value, 'zh-CN');
+export const integerValidator = value => typeof value === 'number' && isInt(value);
+export const floatValidator = value => typeof value === 'number' && isFloat(value);
+export const booleanValidator = value => typeof value === 'boolean';
+export const arrayValidator = value => Array.prototype.isPrototypeOf(value);
+
+function isEmptyObj(obj) {
+    for(let i in obj) {
+        return false;
+    }
+    return true;
+}
+
+export const validate = (params, validator) => {
+
+    for(let i in params) {
+        if(validator && validator[i] !== undefined) {
+            if(Array.prototype.isPrototypeOf(validator[i])) {
+                for(let j in validator[i]) {
+                    if(!validator[i][j].func(params[i])) {
+                        return {
+                            flag: false,
+                            msg: validator[i][j].msg
+                        };
+                    }
+                }
+            } else {
+                if(!validator[i].func(params[i])) {
+                    return {
+                        flag: false,
+                        msg: validator[i].msg
+                    };
+                }
+            }
+        }
+    }
+
+    return {
+        flag: true
+    };
+};

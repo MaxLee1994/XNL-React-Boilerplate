@@ -4,13 +4,12 @@
  **/
 
 import React from 'react';
+import ReactDOMServer from 'react-dom/server';
 import {default as config, globalVars} from './config';
 import url from 'url';
 import {compose, createStore, applyMiddleware} from 'redux';
 import APP from '../../a-reducer/app';
-import {devTools} from 'redux-devtools';
 import createLocation from 'history/lib/createLocation';
-import ValidatorMiddleware from 'redux-validator';
 import MobileDetect from 'mobile-detect';
 import clone from 'lodash.clonedeep';
 import startsWith from 'lodash.startswith';
@@ -18,14 +17,10 @@ import Immutable from 'immutable';
 import HTMLWrap from '../bootstrap/wrap';
 import {routes} from '../../routes';
 import {Provider} from 'react-redux';
-import DevTools from '../bootstrap/devtools';
 import {match, RoutingContext} from 'react-router';
 
 const finalCreateStore = process.env.NODE_ENV === 'production' ? compose(
-    applyMiddleware(ValidatorMiddleware())
 )(createStore) : compose(
-    applyMiddleware(ValidatorMiddleware()),
-    devTools()
 )(createStore);
 
 export default function(req, res, next) {
@@ -100,13 +95,10 @@ export default function(req, res, next) {
                             }
                             return React.createElement(Component, newProps);
                         };
-                        html = React.renderToString(
-                            <div>
-                                <Provider store={store}>
-                                    {() => <RoutingContext {...renderProps} />}
-                                </Provider>
-                                <DevTools store={store}/>
-                            </div>
+                        html = ReactDOMServer.renderToString(
+                            <Provider store={store}>
+                                <RoutingContext {...renderProps} />
+                            </Provider>
                         );
 
                     } catch(e) {

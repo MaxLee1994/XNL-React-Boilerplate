@@ -5,43 +5,38 @@
 
 import {createAction} from 'redux-actions';
 import ACTION_TYPE from '../const/action-type';
+import {validate, notEmptyValidator, phoneValidator} from '../utils/validator';
 
-const fooValidator = (foo, state) => foo > 0;
-
-export const normalAction =  createAction(ACTION_TYPE.NORMAL, payload => payload, () => ({
-    validator: {
-        payload: {
-            func: (payload, state) => payload > 0
-        }
-    }
-}));
-export const multiParaAction = createAction(ACTION_TYPE.MULTI_PARA, (foo, bar) => ({foo, bar}), () => ({
-    validator: {
-        foo: {
-            func: fooValidator,
-            msg: 'foo wrong'
+const normalActionValidators = {
+    foo: {
+        func: notEmptyValidator,
+        msg: 'foo不能为空'
+    },
+    bar: [
+        {
+            func: notEmptyValidator,
+            msg: 'bar不能为空'
         },
-        bar: [
-            {
-                func: (bar, state) => bar > 0
-            },
-            {
-                func: (bar, state) => bar < 100
-            }
-        ]
-    }
-}));
-export const asyncAction = createAction(ACTION_TYPE.ASYNC, foo => {
-    const request = _ajax.getStub('/example');
-
-    return {
-        foo,
-        nextPayload: request
-    };
-}, () => ({
-    validator: {
-        foo: {
-            func: fooValidator
+        {
+            func: phoneValidator,
+            msg: '非法的手机号'
         }
+    ]
+};
+
+export const normalAction =  (payload) => {
+    const result = validate(payload, normalActionValidators);
+    if(!result.flag) {
+        return result;
+    } else {
+        return createAction(ACTION_TYPE.NORMAL, payload => payload)(payload);
     }
-}));
+};
+export const asyncAction = (payload) => {
+    const result = validate(payload, normalActionValidators);
+    if(!result.flag) {
+        return result;
+    } else {
+        return createAction(ACTION_TYPE.ASYNC, payload => _ajax.getStub('/example'))(payload);
+    }
+};

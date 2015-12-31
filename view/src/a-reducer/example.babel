@@ -20,16 +20,17 @@ const example = createReducer(Immutable.Map(), {
         return state;
     },
     [ACTION_TYPE.NORMAL](state, action) {
-        let result = state.set('foo', action.payload);
-        return result;
-    },
-    [ACTION_TYPE.MULTI_PARA](state, action) {
-        let result = state.set('foo', action.payload.foo)
-                          .set('bar', action.payload.bar);
+        let result = state;
+        for(let i in action.payload) {
+            result = result.set(i, action.payload[i]);
+        }
         return result;
     },
     [ACTION_TYPE.ASYNC](state, action) {
-        let result = state.set('bar', action.payload.bar);
+        let result = state;
+        for(let i in action.payload) {
+            result = result.set(i, action.payload[i]);
+        }
         return result;
     }
 });

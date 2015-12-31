@@ -16,13 +16,14 @@ module.exports = {
         '$': '$',
         'react': 'React',
         'immutable': 'Immutable',
-        'cookies': 'Cookies'
+        'cookies': 'Cookies',
+        'react-dom': 'ReactDOM'
     },
     module: {
         loaders: [
             {
                 test: /\.less$/,
-                loader: 'to-string!css!postcss-loader!less!less-import-loader'
+                loader: 'to-string!css!postcss-loader!less!xnl-less-base-import-loader'
             },
             {
                 test: /\.babel$/,
