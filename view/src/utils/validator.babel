@@ -5,7 +5,12 @@
 
 import {isMobilePhone, isInt, isFloat, isBoolean} from 'validator';
 
-export const notEmptyValidator = value => value !== '' && value !== undefined && value !== null && !(Array.prototype.isPrototypeOf(value) && value.length === 0) && !(typeof value === 'object' && isEmptyObj(value));
+export const notEmptyValidator = value => value !== '' &&
+                                          value !== undefined &&
+                                          value !== null &&
+                                          !(isNaN(value) && typeof value === 'number') &&
+                                          !(Array.prototype.isPrototypeOf(value) && value.length === 0) &&
+                                          !(typeof value === 'object' && isEmptyObj(value));
 export const phoneValidator = value => isMobilePhone(value, 'zh-CN');
 export const integerValidator = value => typeof value === 'number' && isInt(value);
 export const floatValidator = value => typeof value === 'number' && isFloat(value);
