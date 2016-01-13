@@ -30,3 +30,11 @@
 
 + 更新包依赖，主要React升级到0.14
 + action字段验证方案不再采用redux中间件，解决Promise先发出HTTP请求的问题
+
+# 0.1.5
+
++ initialData方法注入renderProps
++ 修复404问题
++ 增加initialState编码和解码，避免JSON.parse字符串转义问题
++ validator中notEmptyValidator覆盖value是NaN的情况
++ 图片上传采用配置式，增加删除图片接口
