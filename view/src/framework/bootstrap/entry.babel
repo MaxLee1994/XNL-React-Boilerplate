@@ -63,7 +63,7 @@ if(__WEBPACK_DEV__) {
    )(createStore);
 }
 
-let initialState = JSON.parse(__INITIAL_STATE__);
+let initialState = JSON.parse(unescape(__INITIAL_STATE__));
 for(let i in initialState) {
     initialState[i] = Immutable.fromJS(initialState[i]);
 }

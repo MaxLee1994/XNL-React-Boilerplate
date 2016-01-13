@@ -76,7 +76,7 @@ export default function(req, res, next) {
 
                         const md = new MobileDetect(req.headers['user-agent']);
                         let thisGlobalVars = clone(globalVars);
-                        thisGlobalVars.__INITIAL_STATE__ = JSON.stringify(initialState);
+                        thisGlobalVars.__INITIAL_STATE__ = escape(JSON.stringify(initialState));
                         thisGlobalVars.__PHONE__ = md.phone() !== null;
                         thisGlobalVars.__TABLET__ = md.tablet() !== null;
                         thisGlobalVars.__MOBILE__ = md.mobile() !== null;
