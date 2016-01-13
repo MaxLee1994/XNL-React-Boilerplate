@@ -9,15 +9,16 @@ import {OSS} from 'aliyun-sdk';
 import fs from 'fs';
 import fse from 'fs-extra';
 import uuid from 'node-uuid';
+import url from 'url';
 
 var oss = new OSS({
     "accessKeyId": config.getIn(['ALIYUN', 'ACCESS_KEY_ID']),
     "secretAccessKey": config.getIn(['ALIYUN', 'ACCESS_KEY_SECRET']),
-    endpoint: config.getIn(['ALIYUN', 'OSS_ENDPOINT']),
+    endpoint: `http://${config.getIn(['ALIYUN', 'OSS_ENDPOINT'])}`,
     apiVersion: '2013-10-15'
 });
 
-export default function(req, res, next) {
+export const addImage = (req, res, next) => {
     var form = new Formidable.IncomingForm();
     form.encoding = 'utf-8';
     form.uploadDir = process.cwd();
@@ -62,7 +63,7 @@ export default function(req, res, next) {
                                 return;
                             }
                             fse.removeSync(files[i].path);
-                            resolve(`http://xnl-project.oss-cn-qingdao.aliyuncs.com/${config.getIn(['ALIYUN', 'DIRECTORY'])}/${key}`);
+                            resolve(`http://${config.getIn(['ALIYUN', 'BUCKET'])}.${config.getIn(['ALIYUN', 'OSS_ENDPOINT'])}/${config.getIn(['ALIYUN', 'DIRECTORY'])}/${key}`);
                         });
                     });
                 })
@@ -81,4 +82,31 @@ export default function(req, res, next) {
             });
         });
     });
-}
+};
+
+export const deleteImage = (req, res, next) => {
+    const toDeleteURL = req.query ? req.query.key : undefined;
+    if(toDeleteURL) {
+        const urlObj = url.parse(toDeleteURL);
+        oss.deleteObject({
+            Bucket: config.getIn(['ALIYUN', 'BUCKET']),
+            Key: urlObj.path.substr(1)
+        }, (err, data) => {
+            if(err) {
+                res.json({
+                    result_code: 1,
+                    error: err
+                });
+            } else {
+                res.json({
+                    result_code: 0
+                });
+            }
+        });
+    } else {
+        res.json({
+            result_code: 1,
+            error: 'key must be specified'
+        });
+    }
+};

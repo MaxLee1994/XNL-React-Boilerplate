@@ -17,7 +17,9 @@ export const globalVars = {
     __STUB_SERVER_PORT__: config.STUB_SERVER.PORT,
     __API_SERVER_HOSTNAME__: config.API_SERVER.HOSTNAME,
     __API_SERVER_PORT__: config.API_SERVER.PORT,
-    __DEV__: process.env.NODE_ENV === 'production' ? false : true
+    __DEV__: process.env.NODE_ENV === 'production' ? false : true,
+    __IMAGE_UPLOAD_ADD_URL__: config.APP + config.IMAGE_UPLOAD.ADD_PATH,
+    __IMAGE_UPLOAD_DELETE_URL__: config.APP + config.IMAGE_UPLOAD.DELETE_PATH
 };
 
 for(let i in globalVars) {

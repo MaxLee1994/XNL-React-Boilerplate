@@ -21,7 +21,8 @@ module.exports = {
         PORT: 8080
     },
     IMAGE_UPLOAD: {
-        PATH: '/image/upload',
+        ADD_PATH: '/image/upload',
+        DELETE_PATH: '/image/delete',
         MAX_SIZE: 2097152
     },
     ALIYUN: {
