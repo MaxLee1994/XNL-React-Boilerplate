@@ -28,7 +28,7 @@ app.all('*', (req, res, next) => {
 });
 app.use('/' + config.get('DIST_PATH'), express.static(config.get('DIST_PATH')));
 app.all('/stub/*', Stub);
-app.all(config.getIn(['IMAGE_UPLOAD', 'ADD_PATH']), addImage);
+app.all(`${config.getIn(['IMAGE_UPLOAD', 'ADD_PATH'])}/:directory`, addImage);
 app.all(config.getIn(['IMAGE_UPLOAD', 'DELETE_PATH']), deleteImage);
 app.get('*', Page);
 

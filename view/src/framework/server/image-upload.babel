@@ -47,7 +47,7 @@ export const addImage = (req, res, next) => {
                         const key = uuid.v1();
                         oss.putObject({
                             Bucket: config.getIn(['ALIYUN', 'BUCKET']),
-                            Key: `${config.getIn(['ALIYUN', 'DIRECTORY'])}/${key}`,
+                            Key: `${req.params.directory || config.getIn(['ALIYUN', 'DIRECTORY'])}/${key}`,
                             Body: data,
                             AccessControlAllowOrigin: '',
                             ContentType: files[i].type,
@@ -57,13 +57,14 @@ export const addImage = (req, res, next) => {
                             ServerSideEncryption: 'AES256',
                             Expires: undefined
                         }, function (err, data) {
+                            console.log(err);
                             if (err) {
                                 console.error(err);
                                 reject(err);
                                 return;
                             }
                             fse.removeSync(files[i].path);
-                            resolve(`http://${config.getIn(['ALIYUN', 'BUCKET'])}.${config.getIn(['ALIYUN', 'OSS_ENDPOINT'])}/${config.getIn(['ALIYUN', 'DIRECTORY'])}/${key}`);
+                            resolve(`http://${config.getIn(['ALIYUN', 'BUCKET'])}.${config.getIn(['ALIYUN', 'OSS_ENDPOINT'])}/${req.params.directory || config.getIn(['ALIYUN', 'DIRECTORY'])}/${key}`);
                         });
                     });
                 })
