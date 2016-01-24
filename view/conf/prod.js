@@ -12,13 +12,17 @@ module.exports = {
     IMAGE_STATIC_PATH: '/dist/images/',
     STYLE_STATIC_PATH: '/dist/style/',
     STUB_SERVER: {
-        HOSTNAME: 'localhost',
-        PORT: 8888,
+        AJAX_HOSTNAME: 'localhost',
+        AJAX_PORT: 8888,
+        HTTP_HOSTNAME: 'localhost',
+        HTTP_PORT: 8080,
         FILE_DIR: 'stub'
     },
     API_SERVER: {
-        HOSTNAME: 'localhost',
-        PORT: 80
+        AJAX_HOSTNAME: 'localhost',
+        AJAX_PORT: 80,
+        HTTP_HOSTNAME: 'localhost',
+        HTTP_PORT: 80
     },
     IMAGE_UPLOAD: {
         ADD_PATH: '/image/upload',

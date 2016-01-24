@@ -13,10 +13,10 @@ import cookieParser from 'cookie-parser';
 
 import HTTP from '../utils/http';
 global._http = new HTTP({
-    hostname: config.getIn(['API_SERVER', 'HOSTNAME']),
-    port: config.getIn(['API_SERVER', 'PORT']),
-    stubHostname: config.getIn(['STUB_SERVER', 'HOSTNAME']),
-    stubPort: config.getIn(['STUB_SERVER', 'PORT'])
+    hostname: config.getIn(['API_SERVER', 'HTTP_HOSTNAME']),
+    port: config.getIn(['API_SERVER', 'HTTP_PORT']),
+    stubHostname: config.getIn(['STUB_SERVER', 'HTTP_HOSTNAME']),
+    stubPort: config.getIn(['STUB_SERVER', 'HTTP_PORT'])
 });
 
 const app = express();
