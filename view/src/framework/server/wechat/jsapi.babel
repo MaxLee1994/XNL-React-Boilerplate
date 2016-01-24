@@ -1,0 +1,16 @@
+/**
+ * @fileOverview 获取js signature
+ * @author Max
+ **/
+
+import * as wechatManager from './wechat-manager';
+import sign from './sign';
+
+export default function(req, res) {
+    const url = req.query.url;
+
+    res.json({
+        result_code: 0,
+        data: sign(wechatManager.getJSAPITicket(), url)
+    });
+}

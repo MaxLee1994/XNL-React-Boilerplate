@@ -36,5 +36,14 @@ module.exports = {
         BUCKET: 'xnl-project',
         DIRECTORY: 'template'
     },
+    WECHAT: {
+        SERVER: 'http://template.com:9999',
+        AUTH: 'https://open.weixin.qq.com/connect/oauth2/authorize',
+        GET_ACCESS_TOKEN: 'https://api.weixin.qq.com/sns/oauth2/access_token',
+        GET_GLOBAL_ACCESS_TOKEN: 'https://api.weixin.qq.com/cgi-bin/token',
+        GET_JS_API_TICKET: 'https://api.weixin.qq.com/cgi-bin/ticket/getticket',
+        APP_ID: '',
+        APP_SECRET: ''
+    },
     CROSSDOMAIN: ''
 };

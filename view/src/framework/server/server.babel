@@ -10,22 +10,44 @@ import Stub from './stub';
 import Page from './page';
 import {addImage, deleteImage} from './image-upload';
 import cookieParser from 'cookie-parser';
+import Wechat from './wechat';
+import WechatJSAPI from './wechat/jsapi';
+import * as wechatManager from './wechat/wechat-manager';
+import session from 'express-session';
 
 import HTTP from '../utils/http';
+import HTTPS from '../utils/https';
 global._http = new HTTP({
     hostname: config.getIn(['API_SERVER', 'HTTP_HOSTNAME']),
     port: config.getIn(['API_SERVER', 'HTTP_PORT']),
     stubHostname: config.getIn(['STUB_SERVER', 'HTTP_HOSTNAME']),
     stubPort: config.getIn(['STUB_SERVER', 'HTTP_PORT'])
 });
+global._https = new HTTPS({
+    hostname: config.getIn(['API_SERVER', 'HTTP_HOSTNAME']),
+    port: config.getIn(['API_SERVER', 'HTTP_PORT']),
+    stubHostname: config.getIn(['STUB_SERVER', 'HTTP_HOSTNAME']),
+    stubPort: config.getIn(['STUB_SERVER', 'HTTP_PORT'])
+});
+
+if(process.env.NODE_ENV === 'production') {
+    wechatManager.init();
+}
 
 const app = express();
 
 app.use(cookieParser());
+app.use(session({
+    secret: 'keyboard cat',
+    resave: true,
+    saveUninitialized: true
+}));
 app.all('*', (req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", config.get('CROSSDOMAIN'));
     next();
 });
+app.get('/wechat-auth', Wechat);
+app.get('/wechat-jsapi', WechatJSAPI);
 app.use('/' + config.get('DIST_PATH'), express.static(config.get('DIST_PATH')));
 app.all('/stub/*', Stub);
 app.all(`${config.getIn(['IMAGE_UPLOAD', 'ADD_PATH'])}/:directory`, addImage);
