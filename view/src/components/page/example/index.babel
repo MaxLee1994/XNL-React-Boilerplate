@@ -12,7 +12,7 @@ class Page extends React.Component {
     constructor(props) {
         super(props);
     }
-    static initialData(wrap) {
+    static interceptor(wrap, config, props, res, req) {
 
     }
     asyncAction() {
