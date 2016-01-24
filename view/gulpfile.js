@@ -61,7 +61,7 @@ gulp.task('compile less', [], function() {
 });
 
 function compileLess() {
-    var processors = [autoprefixer, cssnano];
+    var processors = [autoprefixer, cssnano({zindex: false})];
 
     return gulp.src([path.join(SRC_DIR, '**/*.less')])
                .pipe(plumber())

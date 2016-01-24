@@ -32,7 +32,7 @@ module.exports = {
         ]
     },
     postcss: function() {
-        return [autoprefixer, cssnano];
+        return [autoprefixer, cssnano({zindex: false})];
     },
     serverLessLoader: {
         loader: '_importLess'
