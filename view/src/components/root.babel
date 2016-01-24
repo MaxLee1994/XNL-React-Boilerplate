@@ -7,7 +7,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 
 class Root extends React.Component {
-    static initialData(wrap, config) {
+    static interceptor(wrap, config) {
         wrap.setTag('title', 'XNL-React-Boilerplate');
         wrap.prependTagBefore('headTagClose', 'globalStyle', {href: config.get('STYLE_STATIC_PATH') + 'global.css'}, wrap.TAG_TYPE.STYLE);
         wrap.prependTagBefore('headTagClose', 'resetStyle', {href: config.get('STYLE_STATIC_PATH') + 'reset.css'}, wrap.TAG_TYPE.STYLE);
