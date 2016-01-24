@@ -38,3 +38,14 @@
 + 增加initialState编码和解码，避免JSON.parse字符串转义问题
 + validator中notEmptyValidator覆盖value是NaN的情况
 + 图片上传采用配置式，增加删除图片接口
+
+# 0.1.6
+
++ retina默认2x
++ 更新依赖
++ 添加Redirect引用
++ 图片上传directory可自定义
++ 关掉cssnano自动rebase zindex
++ 调整静态initialData接口语义，更名为interceptor
++ 分离ajax和http的请求配置
++ 增加对微信认证和jsapi的支持
