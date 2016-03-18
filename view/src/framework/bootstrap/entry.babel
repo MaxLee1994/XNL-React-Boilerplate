@@ -7,12 +7,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
 import {routes} from '../../routes';
-import Router from 'react-router';
+import {Router, browserHistory} from 'react-router';
 import {compose, createStore, applyMiddleware} from 'redux';
 import APP from '../../a-reducer/app';
 import promiseMiddleware from 'redux-promise';
 import Immutable from 'immutable';
-import createBrowserHistory from 'history/lib/createBrowserHistory';
 import ValidatorMiddleware from 'redux-validator';
 import ThunkMiddleware from 'redux-thunk';
 
@@ -44,16 +43,11 @@ if(__WEBPACK_DEV__) {
     const createLogger = require('redux-logger');
     finalCreateStore = compose(
        applyMiddleware(ValidatorMiddleware(), ThunkMiddleware, promiseMiddleware, createLogger({
-           transformer: (state) => {
-               var newState = {};
-               for (var i of Object.keys(state)) {
-                   if (Immutable.Iterable.isIterable(state[i])) {
-                       newState[i] = state[i].toJS();
-                   } else {
-                       newState[i] = state[i];
-                   }
-               }
-               return newState;
+           stateTransformer: state => {
+               if (Immutable.Iterable.isIterable(state))
+                   return state.toJS();
+               else
+                   return state;
            }
        })),
        devTools.instrument(),
@@ -61,7 +55,7 @@ if(__WEBPACK_DEV__) {
    )(createStore);
 } else {
     finalCreateStore = compose(
-       applyMiddleware(ValidatorMiddleware(), promiseMiddleware)
+       applyMiddleware(ValidatorMiddleware(), ThunkMiddleware, promiseMiddleware)
    )(createStore);
 }
 
@@ -88,6 +82,6 @@ const createElement = (Component, props) => {
 
 ReactDOM.render((
     <Provider store={store}>
-        <Router history={createBrowserHistory()} store={store} createElement={createElement}>{routes}</Router>
+        <Router history={browserHistory} createElement={createElement} routes={routes} />
     </Provider>
 ), document.getElementById('root'));

@@ -3,7 +3,9 @@
  * @author Max
  **/
 
-import {isMobilePhone, isInt, isFloat, isBoolean} from 'validator';
+import isMobilePhone from 'validator/lib/isMobilePhone';
+import isInt from 'validator/lib/isInt';
+import isFloat from 'validator/lib/isFloat';
 
 export const notEmptyValidator = value => value !== '' &&
                                           value !== undefined &&
@@ -11,9 +13,9 @@ export const notEmptyValidator = value => value !== '' &&
                                           !(isNaN(value) && typeof value === 'number') &&
                                           !(Array.prototype.isPrototypeOf(value) && value.length === 0) &&
                                           !(typeof value === 'object' && isEmptyObj(value));
-export const phoneValidator = value => isMobilePhone(value, 'zh-CN');
-export const integerValidator = value => typeof value === 'number' && isInt(value);
-export const floatValidator = value => typeof value === 'number' && isFloat(value);
+export const phoneValidator = value => isMobilePhone(value + '', 'zh-CN');
+export const integerValidator = value => typeof value === 'number' && isInt(value + '');
+export const floatValidator = value => typeof value === 'number' && isFloat(value + '');
 export const booleanValidator = value => typeof value === 'boolean';
 export const arrayValidator = value => Array.prototype.isPrototypeOf(value);
 

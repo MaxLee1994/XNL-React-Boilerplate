@@ -9,7 +9,6 @@ import {default as config, globalVars} from './config';
 import url from 'url';
 import {compose, createStore, applyMiddleware} from 'redux';
 import APP from '../../a-reducer/app';
-import createLocation from 'history/lib/createLocation';
 import MobileDetect from 'mobile-detect';
 import clone from 'lodash.clonedeep';
 import startsWith from 'lodash.startswith';
@@ -17,7 +16,7 @@ import Immutable from 'immutable';
 import HTMLWrap from '../bootstrap/wrap';
 import {routes} from '../../routes';
 import {Provider} from 'react-redux';
-import {match, RoutingContext} from 'react-router';
+import {match, RouterContext} from 'react-router';
 
 const finalCreateStore = compose()(createStore);
 
@@ -31,7 +30,7 @@ export default function(req, res, next) {
         console.log(`new request ${urlObj.path}`);
         match({
             routes,
-            location: createLocation(urlObj.path)
+            location: req.url
         }, (error, redirectLocation, renderProps) => {
             if(redirectLocation) {
                  res.redirect(301, redirectLocation.pathname + redirectLocation.search);
@@ -95,7 +94,7 @@ export default function(req, res, next) {
                         };
                         html = ReactDOMServer.renderToString(
                             <Provider store={store}>
-                                <RoutingContext {...renderProps} />
+                                <RouterContext {...renderProps} />
                             </Provider>
                         );
 
