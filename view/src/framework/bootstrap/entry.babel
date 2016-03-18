@@ -13,6 +13,8 @@ import APP from '../../a-reducer/app';
 import promiseMiddleware from 'redux-promise';
 import Immutable from 'immutable';
 import createBrowserHistory from 'history/lib/createBrowserHistory';
+import ValidatorMiddleware from 'redux-validator';
+import ThunkMiddleware from 'redux-thunk';
 
 import AJAX from '../utils/ajax';
 import Storage from '../utils/storage';
@@ -41,7 +43,7 @@ if(__WEBPACK_DEV__) {
     };
     const createLogger = require('redux-logger');
     finalCreateStore = compose(
-       applyMiddleware(promiseMiddleware, createLogger({
+       applyMiddleware(ValidatorMiddleware(), ThunkMiddleware, promiseMiddleware, createLogger({
            transformer: (state) => {
                var newState = {};
                for (var i of Object.keys(state)) {
@@ -59,7 +61,7 @@ if(__WEBPACK_DEV__) {
    )(createStore);
 } else {
     finalCreateStore = compose(
-       applyMiddleware(promiseMiddleware)
+       applyMiddleware(ValidatorMiddleware(), promiseMiddleware)
    )(createStore);
 }
 

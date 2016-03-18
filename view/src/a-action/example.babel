@@ -3,7 +3,7 @@
  * @author Max
  **/
 
-import {createAction} from 'redux-actions';
+import {createAction} from './utils';
 import ACTION_TYPE from '../const/action-type';
 import {validate, notEmptyValidator, phoneValidator} from '../utils/validator';
 
@@ -24,19 +24,18 @@ const normalActionValidators = {
     ]
 };
 
-export const normalAction =  (payload) => {
-    const result = validate(payload, normalActionValidators);
-    if(!result.flag) {
-        return result;
-    } else {
-        return createAction(ACTION_TYPE.NORMAL, payload => payload)(payload);
+export const normalAction =  createAction(ACTION_TYPE.NORMAL, payload => payload, () => ({
+    validator: normalActionValidators
+}));
+
+// validator -> thunk
+export const asyncAction = createAction(ACTION_TYPE.ASYNC, payload => ({
+    foo: payload
+}), () => ({
+    validator: {
+        foo: {
+            func: notEmptyValidator,
+            msg: 'foo不能为空'
+        }
     }
-};
-export const asyncAction = (payload) => {
-    const result = validate(payload, normalActionValidators);
-    if(!result.flag) {
-        return result;
-    } else {
-        return createAction(ACTION_TYPE.ASYNC, payload => _ajax.getStub('/example'))(payload);
-    }
-};
+}), (a, b) => {console.log(a,b);return _ajax.getStub('/example');});

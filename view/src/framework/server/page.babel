@@ -19,9 +19,7 @@ import {routes} from '../../routes';
 import {Provider} from 'react-redux';
 import {match, RoutingContext} from 'react-router';
 
-const finalCreateStore = process.env.NODE_ENV === 'production' ? compose(
-)(createStore) : compose(
-)(createStore);
+const finalCreateStore = compose()(createStore);
 
 export default function(req, res, next) {
 

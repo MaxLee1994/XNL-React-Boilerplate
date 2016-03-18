@@ -1,0 +1,24 @@
+/**
+ * @fileOverview action creator
+ * @author Max
+ **/
+
+import {createAction as createFSA} from 'redux-actions';
+import clone from 'lodash.clonedeep';
+
+export function createAction(actionType, payloadCreator, metaCreator, requestCreator) {
+    return (...args) => {
+        let oriFSA = createFSA(actionType, payloadCreator, metaCreator)(...args);
+        if(requestCreator) {
+            oriFSA.payload = oriFSA.payload || {};
+            let oriPayload = clone(oriFSA.payload);
+            oriFSA.payload.thunk = dispatch => dispatch({
+                type: actionType,
+                payload: requestCreator(...args),
+                meta: oriPayload
+            });
+        }
+
+        return oriFSA;
+    };
+}

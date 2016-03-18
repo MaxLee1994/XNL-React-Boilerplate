@@ -18,13 +18,20 @@ class Page extends React.Component {
     asyncAction() {
         const {dispatch} = this.props;
 
-        dispatch(actions.asyncAction(4));
+        const result = dispatch(actions.asyncAction(3,4));
+        console.log(result);
     }
     failureAction() {
         const result = actions.normalAction({foo:1, bar:2});
         if(!result.flag) {
             alert(result.msg);
         }
+    }
+    normalAction() {
+        const {dispatch} = this.props;
+
+        const result = dispatch(actions.normalAction({foo:3, bar:13951893509}));
+        console.log(result);
     }
     render() {
         const {dispatch, foo, bar} = this.props;
@@ -35,7 +42,7 @@ class Page extends React.Component {
                 <h1>XNL React Boilerplate</h1>
                 <h2>ctrl + H 打开devtools，或者控制台查看log</h2>
 
-                <button onClick={() => {dispatch(actions.normalAction({foo:3}));}}>normal action</button>
+                <button onClick={this.normalAction.bind(this)}>normal action</button>
                 <button onClick={this.failureAction.bind(this)}>multi-para action</button>
                 <button onClick={this.asyncAction.bind(this)}>async action</button>
 
