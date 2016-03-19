@@ -6,8 +6,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
-import {routes} from '../../routes';
-import {Router, browserHistory} from 'react-router';
+import {routes} from './routes';
+import {match, Router, browserHistory} from 'react-router';
 import {compose, createStore, applyMiddleware} from 'redux';
 import APP from '../../a-reducer/app';
 import promiseMiddleware from 'redux-promise';
@@ -80,8 +80,10 @@ const createElement = (Component, props) => {
     return React.createElement(Component, newProps);
 };
 
-ReactDOM.render((
-    <Provider store={store}>
-        <Router history={browserHistory} createElement={createElement} routes={routes} />
-    </Provider>
-), document.getElementById('root'));
+match({ history: browserHistory, routes }, (error, redirectLocation, renderProps) => {
+    ReactDOM.render((
+        <Provider store={store}>
+            <Router createElement={createElement} {...renderProps} />
+        </Provider>
+    ), document.getElementById('root'));
+});

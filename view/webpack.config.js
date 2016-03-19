@@ -9,7 +9,9 @@ module.exports = {
     },
     output: {
         path: path.join(__dirname, 'dist', 'js/page'),
-        filename: '[name].js'
+        publicPath: '/dist/js/page/',
+        filename: '[name].js',
+        chunkFilename: '[name].js',
     },
     externals: {
         '$': '$',
@@ -49,6 +51,10 @@ module.exports = {
         new webpack.optimize.DedupePlugin(),
         new webpack.DefinePlugin({
             __WEBPACK_DEV__: false
+        }),
+        new webpack.optimize.CommonsChunkPlugin({
+            name: 'commons',
+            filename: 'commons.js'
         })
     ],
     resolve: {

@@ -2,19 +2,26 @@
  * @fileOverview 页面路由
  * @author Max
  **/
+
 import React from 'react';
 import {Route, IndexRoute, Redirect} from 'react-router';
-import Root from './components/root';
-import Example from './components/page/example/';
 
 const server = input => {
     return typeof window === 'undefined' ? input : <Route path="somethingelsethatisneverreachable"/>;
 };
 
-const routes = (
-    <Route path="/" component={Root}>
-        <IndexRoute component={Example} />
-    </Route>
-);
+if (typeof require.ensure !== 'function') {
+    require.ensure = (dep, callback) => {
+        callback(require);
+    };
+}
 
-export {routes} ;
+const Routes = [
+    <Route path="/a" getComponent={(location, callback) => {
+        require.ensure([], function(require) {
+            callback(null, require('./components/page/example2'));
+        });
+    }} />
+];
+
+export default Routes;

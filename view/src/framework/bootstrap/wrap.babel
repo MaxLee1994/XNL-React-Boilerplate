@@ -39,6 +39,7 @@ const bottom = {
     reactDOM: process.env.NODE_ENV === 'production' ? '<script type="text/javascript" src="//cdn.bootcss.com/react/0.14.7/react-dom.min.js"></script>' : `<script type="text/javascript" src="${config.get('JS_LIB_PATH')}react-dom-0.14.7.min.js"></script>`,
     immutable: process.env.NODE_ENV === 'production' ? '<script type="text/javascript" src="//cdn.bootcss.com/immutable/3.7.6/immutable.min.js"></script>' : `<script type="text/javascript" src="${config.get('JS_LIB_PATH')}immutable-3.7.6.min.js"></script>`,
     cookie: process.env.NODE_ENV === 'production' ? '<script type="text/javascript" src="//cdn.bootcss.com/js-cookie/2.0.3/js.cookie.min.js"></script>' : `<script type="text/javascript" src="${config.get('JS_LIB_PATH')}js-cookie-2.0.3.min.js"></script>`,
+    commons: `<script type="text/javascript" src="${config.get('JS_STATIC_PATH')}page/commons.js"></script>`,
     entry: `<script type="text/javascript" src="${config.get('JS_STATIC_PATH')}page/entry.js"></script>`,
     bodyTagClose: '</body>',
     htmlTagClose: '</html>'

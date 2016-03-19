@@ -14,7 +14,7 @@ import clone from 'lodash.clonedeep';
 import startsWith from 'lodash.startswith';
 import Immutable from 'immutable';
 import HTMLWrap from '../bootstrap/wrap';
-import {routes} from '../../routes';
+import {routes} from '../bootstrap/routes';
 import {Provider} from 'react-redux';
 import {match, RouterContext} from 'react-router';
 

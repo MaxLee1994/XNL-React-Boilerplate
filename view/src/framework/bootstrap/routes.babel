@@ -1,0 +1,29 @@
+/**
+ * @fileOverview 页面路由bootstrap
+ * @author Max
+ **/
+import React from 'react';
+import {Route, IndexRoute} from 'react-router';
+import Root from '../../components/root';
+
+if (typeof require.ensure !== 'function') {
+    require.ensure = (dep, callback) => {
+        callback(require);
+    };
+}
+
+const routes = (
+    <Route path="/" component={Root} getChildRoutes={(location, callback) => {
+            require.ensure([], function(require) {
+                callback(null, require('../../routes'));
+            });
+        }}>
+        <IndexRoute getComponent={(location, callback) => {
+            require.ensure([], function(require) {
+                callback(null, require('../../components/page/index'));
+            });
+        }} />
+    </Route>
+);
+
+export {routes} ;
