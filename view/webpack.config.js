@@ -50,7 +50,8 @@ module.exports = {
         }),
         new webpack.optimize.DedupePlugin(),
         new webpack.DefinePlugin({
-            __WEBPACK_DEV__: false
+            __WEBPACK_DEV__: false,
+            'process.env.NODE_ENV': '"production"'
         }),
         new webpack.optimize.CommonsChunkPlugin({
             name: 'commons',
