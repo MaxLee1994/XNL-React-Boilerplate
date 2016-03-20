@@ -49,3 +49,11 @@
 + 调整静态initialData接口语义，更名为interceptor
 + 分离ajax和http的请求配置
 + 增加对微信认证和jsapi的支持
+
+# 0.2.0
+
++ 更新依赖包，并相应调整代码结构
++ less工具包`#u`变为`#U`，方便输入
++ 重新引入`redux-validator`，并引入`redux-thunk`,调整redux data flow解决Promise先发请求的问题
++ 增加code split机制，减少首屏加载js文件大小
++ 所有服务器请求增加gzip，大幅降低文件传输size
