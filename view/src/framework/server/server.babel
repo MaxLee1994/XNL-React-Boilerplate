@@ -14,6 +14,7 @@ import Wechat from './wechat';
 import WechatJSAPI from './wechat/jsapi';
 import * as wechatManager from './wechat/wechat-manager';
 import session from 'express-session';
+import compression from 'compression';
 
 import HTTP from '../utils/http';
 import HTTPS from '../utils/https';
@@ -36,6 +37,7 @@ if(process.env.NODE_ENV === 'production') {
 
 const app = express();
 
+app.use(compression());
 app.use(cookieParser());
 app.use(session({
     secret: 'keyboard cat',
