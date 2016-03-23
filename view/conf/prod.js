@@ -9,7 +9,7 @@ module.exports = {
     DIST_PATH: 'dist',
     JS_LIB_PATH: '/dist/lib/',
     JS_STATIC_PATH: '/dist/js/',
-    IMAGE_STATIC_PATH: '/dist/images/',
+    IMAGE_STATIC_PATH: 'http://onetalent2016.oss-cn-shanghai.aliyuncs.com/web/',
     STYLE_STATIC_PATH: '/dist/style/',
     STUB_SERVER: {
         AJAX_HOSTNAME: 'localhost',
@@ -32,9 +32,10 @@ module.exports = {
     ALIYUN: {
         ACCESS_KEY_ID: 'troDIDnP6lguSWDV',
         ACCESS_KEY_SECRET: 'YoCsBasrrdmmpZzoAroBazsEkWqrg6',
-        OSS_ENDPOINT: 'http://oss-cn-qingdao-internal.aliyuncs.com',
-        BUCKET: 'xnl-project',
-        DIRECTORY: 'template'
+        OSS_ENDPOINT: 'http://oss-cn-shanghai.aliyuncs.com',
+        BUCKET: 'onetalent2016',
+        DIRECTORY: 'template',
+        APP_IMG_DIRECTORY: 'web'
     },
     WECHAT: {
         SERVER: 'http://template.com:9999',

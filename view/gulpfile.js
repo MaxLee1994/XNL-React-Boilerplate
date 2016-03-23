@@ -16,6 +16,8 @@ var lessBaseImport = require('gulp-less-base-import');
 var mocha = require('gulp-mocha');
 var plumber = require('gulp-plumber');
 var path = require('path');
+var oss = require('gulp-oss');
+var gzip = require("gulp-gzip");
 
 var BUILD_DIR = 'dist';
 var SRC_DIR = 'src';
@@ -43,6 +45,26 @@ gulp.task('image compression', ['clean'], function() {
               fileCache: new cache.Cache({cacheDirName: packageFile.name + '-cache'})
           }))
           .pipe(gulp.dest(path.join(BUILD_DIR, IMG_DEST_DIR)));
+});
+
+gulp.task('update img to oss', ['image compression'], function() {
+    var config = require('./conf/prod');
+
+    return gulp.src(path.join(BUILD_DIR, IMG_SRC_DIR, '**'))
+           .pipe(gzip({append: false}))
+           .pipe(cache(oss({
+                    "key": config.ALIYUN.ACCESS_KEY_ID,
+                    "secret": config.ALIYUN.ACCESS_KEY_SECRET,
+                    "endpoint": config.ALIYUN.OSS_ENDPOINT
+                }, {
+                    headers: {
+                      Bucket: config.ALIYUN.BUCKET,
+                      ContentEncoding: 'gzip'
+                    },
+                    uploadPath: config.ALIYUN.APP_IMG_DIRECTORY + '/'
+                }), {
+                    fileCache: new cache.Cache({cacheDirName: packageFile.name + '-cache-oss-img'})
+          }));
 });
 
 gulp.task('webpack', [], function(done) {
@@ -147,7 +169,7 @@ gulp.task('watch lib', [], function() {
     });
 });
 
-gulp.task('default', ['clean', 'image compression', 'webpack', 'babel', 'compile less', 'move lib']);
+gulp.task('default', ['clean', 'image compression', 'update img to oss', 'webpack', 'babel', 'compile less', 'move lib']);
 gulp.task('dev', ['watch webpack', 'watch images', 'watch babel', 'watch less', 'watch lib']);
 gulp.task('test', ['babel', 'compile less', 'compile tests'], function() {
     return gulp.src(path.join(BUILD_DIR, TEST_DIR, 'spec.js'), {read: false})

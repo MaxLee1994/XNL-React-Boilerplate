@@ -32,9 +32,10 @@ module.exports = {
     ALIYUN: {
         ACCESS_KEY_ID: 'troDIDnP6lguSWDV',
         ACCESS_KEY_SECRET: 'YoCsBasrrdmmpZzoAroBazsEkWqrg6',
-        OSS_ENDPOINT: 'http://oss-cn-qingdao.aliyuncs.com',
-        BUCKET: 'xnl-project',
-        DIRECTORY: 'template'
+        OSS_ENDPOINT: 'http://oss-cn-shanghai.aliyuncs.com',
+        BUCKET: 'onetalent2016',
+        DIRECTORY: 'template',
+        APP_IMG_DIRECTORY: 'web'
     },
     WECHAT: {
         SERVER: 'http://template.com:9999',

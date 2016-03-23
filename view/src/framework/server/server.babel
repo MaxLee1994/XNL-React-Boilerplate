@@ -56,6 +56,10 @@ app.all(`${config.getIn(['IMAGE_UPLOAD', 'ADD_PATH'])}/:directory`, addImage);
 app.all(config.getIn(['IMAGE_UPLOAD', 'DELETE_PATH']), deleteImage);
 app.get('*', Page);
 
-// app.listen(config.get('PORT'));
-app.listen();
+if(process.env.NODE_ENV === 'production') {
+    app.listen();
+} else {
+    app.listen(config.get('PORT'));
+}
+
 console.log(`listen to ${config.get('PORT')}`);
