@@ -57,3 +57,10 @@
 + 重新引入`redux-validator`，并引入`redux-thunk`,调整redux data flow解决Promise先发请求的问题
 + 增加code split机制，减少首屏加载js文件大小
 + 所有服务器请求增加gzip，大幅降低文件传输size
+
+# 0.2.1
+
++ 兼容ACE
++ 压缩图片后上传OSS，并修改生产环境图片路径
++ 去掉scoped方案，靠自觉
++ 调整retina默认倍数为可配置
