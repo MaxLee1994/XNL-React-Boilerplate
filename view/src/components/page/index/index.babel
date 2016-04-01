@@ -35,15 +35,12 @@ class Page extends React.Component {
         const result = dispatch(actions.normalAction({foo:3, bar:13951893509}));
         console.log(result);
     }
-    componentDidMount() {
-        console.log(this.props);
-    }
     render() {
         const {dispatch, foo, bar, history} = this.props;
 
         return (
             <div>
-                <style scoped>{style}</style>
+                <style>{style}</style>
                 <h1>XNL React Boilerplate</h1>
                 <h2>ctrl + H 打开devtools，或者控制台查看log</h2>
 

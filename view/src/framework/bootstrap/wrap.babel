@@ -33,7 +33,6 @@ const CDN_INSURANCE = {
 
 const bottom = {
     rootTagClose: '</div>',
-    scopedPolyfill: `<script type="text/javascript" src="${config.get('JS_LIB_PATH')}scoped-polyfill.min.js"></script>`,
     jquery: process.env.NODE_ENV === 'production' ? '<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>' : `<script type="text/javascript" src="${config.get('JS_LIB_PATH')}jquery-2.1.4.min.js"></script>`,
     react: process.env.NODE_ENV === 'production' ? '<script type="text/javascript" src="//cdn.bootcss.com/react/0.14.7/react-with-addons.min.js"></script>' : `<script type="text/javascript" src="${config.get('JS_LIB_PATH')}react-with-addons-0.14.7.js"></script>`,
     reactDOM: process.env.NODE_ENV === 'production' ? '<script type="text/javascript" src="//cdn.bootcss.com/react/0.14.7/react-dom.min.js"></script>' : `<script type="text/javascript" src="${config.get('JS_LIB_PATH')}react-dom-0.14.7.min.js"></script>`,
