@@ -11,6 +11,7 @@ module.exports = {
     JS_STATIC_PATH: '/dist/js/',
     IMAGE_STATIC_PATH: 'http://onetalent2016.oss-cn-shanghai.aliyuncs.com/web/',
     STYLE_STATIC_PATH: '/dist/style/',
+    RETINA_DEFAULT_RATIO: '',
     STUB_SERVER: {
         AJAX_HOSTNAME: 'localhost',
         AJAX_PORT: 8888,

@@ -23,12 +23,15 @@ const mediaQuery2x = '(-webkit-min-device-pixel-ratio: 1.5),' +
                   '(min-resolution: 240dpi)';
 
 // 初始化Retina，检测当前屏幕ratio
-const _devicePixelRatio = getDevicePixelRatio();
+let _devicePixelRatio;
+export default function init(ratio) {
+    _devicePixelRatio = getDevicePixelRatio(ratio);
+}
 
 // 使用media query检测屏幕ratio
-function getDevicePixelRatio() {
+function getDevicePixelRatio(ratio) {
 
-    if(typeof window === 'undefined') return RETINA_RATIO.RATIO_1X;
+    if(typeof window === 'undefined') return ratio || RETINA_RATIO.RATIO_1X;
 
     window.devicePixelRatio = window.devicePixelRatio ||
                               window.screen.deviceXDPI / window.screen.logicalXDPI;

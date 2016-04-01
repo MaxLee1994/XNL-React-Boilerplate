@@ -31,6 +31,9 @@ global._https = new HTTPS({
     stubPort: config.getIn(['STUB_SERVER', 'HTTP_PORT'])
 });
 
+import retina from '../../utils/retina';
+retina(config.get('RETINA_DEFAULT_RATIO'));
+
 if(process.env.NODE_ENV === 'production') {
     wechatManager.init();
 }

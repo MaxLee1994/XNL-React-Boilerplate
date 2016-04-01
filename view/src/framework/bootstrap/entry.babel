@@ -14,6 +14,8 @@ import promiseMiddleware from 'redux-promise';
 import Immutable from 'immutable';
 import ValidatorMiddleware from 'redux-validator';
 import ThunkMiddleware from 'redux-thunk';
+import retina from '../../utils/retina';
+retina();
 
 import AJAX from '../utils/ajax';
 import Storage from '../utils/storage';

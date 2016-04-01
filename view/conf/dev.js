@@ -11,6 +11,7 @@ module.exports = {
     JS_STATIC_PATH: '/dist/js/',
     IMAGE_STATIC_PATH: '/dist/images/',
     STYLE_STATIC_PATH: '/dist/style/',
+    RETINA_DEFAULT_RATIO: '@2x',
     STUB_SERVER: {
         AJAX_HOSTNAME: '127.0.0.1',
         AJAX_PORT: 80,
