@@ -100,7 +100,7 @@ gulp.task('babel', [], function() {
 function compileBabel() {
     return gulp.src(path.join(SRC_DIR, '**/*.babel'))
                .pipe(plumber())
-               .pipe(babel({optional: ['runtime']}))
+               .pipe(babel())
                .pipe(gulp.dest(path.join(BUILD_DIR)));
 }
 

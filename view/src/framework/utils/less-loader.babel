@@ -7,8 +7,8 @@ import path from 'path';
 
 global._importLess = function load(filePath, dirname) {
     // node环境
-
-    let cssFilePath = path.join(dirname, path.dirname(filePath), path.basename(filePath) + '.css');
+    let filePathObj = path.parse(filePath);
+    let cssFilePath = path.join(dirname, filePathObj.dir, filePathObj.name + '.css');
     try {
         let content = fs.readFileSync(cssFilePath, 'utf-8');
         return content;
