@@ -8,15 +8,24 @@ import clone from 'lodash.clonedeep';
 
 export function createAction(actionType, payloadCreator, metaCreator, requestCreator) {
     return (...args) => {
-        let oriFSA = createFSA(actionType, payloadCreator, metaCreator)(...args);
+        let oriFSA;
         if(requestCreator) {
-            oriFSA.payload = oriFSA.payload || {};
+            const realPayloadCreator = payloadCreator === null ? payload => payload : payloadCreator;
+
+            oriFSA = createFSA(actionType, realPayloadCreator, metaCreator)(...args);
+            if(oriFSA.payload === undefined) {
+                oriFSA.payload = {};
+            } else if(typeof oriFSA.payload !== 'object') {
+                oriFSA.payload = {payload: oriFSA.payload};
+            }
             let oriPayload = clone(oriFSA.payload);
             oriFSA.payload.thunk = dispatch => dispatch({
                 type: actionType,
                 payload: requestCreator(...args),
                 meta: oriPayload
             });
+        } else {
+            oriFSA = createFSA(actionType, payloadCreator, metaCreator)(...args);
         }
 
         return oriFSA;
